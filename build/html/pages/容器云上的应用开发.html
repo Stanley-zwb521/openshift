@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>容器应用的构建与部署自动化</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/sphinx.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录：</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="容器云概述.html">1. 开源容器云概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="初探OpenShift容器云.html">2. 初探OpenShift容器云</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift架构探秘.html">3. OpenShift 架构探秘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift企业部署.html">4. OpenShift 企业部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="容器应用的构建与部署自动化.html">5. 容器应用的构建与部署自动化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="持续集成与部署.html">6. 持续集成与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用的微服务化.html">7. 应用的微服务化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用数据持久化.html">8. 应用数据持久化</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nest</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+                   
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+    <ul class="wy-breadcrumbs">
+        
+        <li><a href="../index.html">首页</a> &raquo;</li>
+        
+        <li>容器应用的构建与部署自动化</li>
+         
+        <li class="wy-breadcrumbs-aside">
+            <a href="https://pages.github.ibm.com/fsd-training/cvitube" class="fa fa-github"> CVITube</a>  
+            <a href="../_sources/pages/容器云上的应用开发.md.txt" rel="nofollow"> View page source</a>  
+        </li>
+        
+    </ul>
+
+    
+    <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>容器应用的构建与部署自动化<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>有人认为容器的世界非常美妙， 一切都唾手可得。当我们需要一个MySQL 时，只需要运行一个MySQL 的镜像，稍等片刻， MySQL 的服务就可以使用了。当我们的项目需要持续集成服务时，只需要启动一个Jenkins 镜像便万事大吉了。但是现实是， MySQL 和Jenkins都是“别人家的应用”。企业自身开发的应用并没有现成的镜像可以直接下载。用户必须自行负责应用的容器化，自行构建应用的镜像。接下来将通过对一个Java 应用进行容器化，探究应用容器化的步骤和注意事项。</p>
+<div class="section" id="java">
+<h2>一个Java 应用的容器化之旅<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h2>
+<p>本节把一个简单的Java Web 应用 - My Bank 进行容器化。MyBank 是一个非常简单和典型的Java Web 应用。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>它包含了Java 源代码、JSP 文件、图片和css 等静态资源文件。</p></li>
+<li><p>MyBank 的项目结构是基于Maven 的要求布置的，通过Maven 可以编译和构建My Bank 的部署包一－WAR 包。</p></li>
+<li><p>和其他的应用程序一样， MyBank 在开发过程中，它的所有源代码都被上传到了配置管理库进行版本控制。这里所用的配置管理服务器是GitHub 。</p></li>
+</ul>
+</div></blockquote>
+<p>下面开始容器化这个应用。</p>
+<p>1 ）首先安装源代码工具Git。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="c1"># yum install -y git</span>
+</pre></div>
+</div>
+<p>2 ）从GitHub 上下载示例的Java 应用源代码。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># cd /opt</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span><span class="p">]</span><span class="c1"># git clone https://github.com/nichochen/mybank-demo-maven</span>
+</pre></div>
+</div>
+<p>3 ）准备编译和构建环境。安装应用构建所需的Java 开发工具包JDK 及构建工具Maven 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span> <span class="p">]</span> <span class="c1"># yum install -y maven</span>
+</pre></div>
+</div>
+<p>4 ）通过构建工具编译及构建应用。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span><span class="p">]</span><span class="c1"># cd mybank-demo-maven/</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># mvn package</span>
+</pre></div>
+</div>
+<p>构建完毕后，将在target 目录下生成一个WAR 包ROOT.war 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># ls target/</span>
+<span class="n">classes</span>  <span class="n">maven</span><span class="o">-</span><span class="n">archiver</span>  <span class="n">maven</span><span class="o">-</span><span class="n">status</span>  <span class="n">ROOT</span>  <span class="n">ROOT</span><span class="o">.</span><span class="n">war</span>  <span class="n">surefire</span><span class="o">-</span><span class="n">reports</span>  <span class="n">test</span><span class="o">-</span><span class="n">classes</span>
+</pre></div>
+</div>
+<p>5 ）选择满足应用运行要求的基础容器镜像，或者从基础的操作系统镜像开始安装和构建。为了方便，这里选择Tomcat 7 的官方镜像tomcat:7.0.70-jre7-alpine 。一般推荐预先把镜像下载到本地，以方便本地调试。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker pull tomcat:7.0.70-jre7-alpine</span>
+</pre></div>
+</div>
+<p>6 ）编写Dockerfile 。这个例子中我们的逻辑比较简单就是把构建好的应用部署包拷贝
+到发布目录。Dockerfile 示例如下。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span> <span class="c1"># cat Dockerfile</span>
+<span class="n">FROM</span> <span class="n">tomcat</span><span class="p">:</span><span class="mf">7.0</span><span class="o">.</span><span class="mi">70</span><span class="o">-</span><span class="n">jre7</span><span class="o">-</span><span class="n">alpine</span>
+<span class="n">ADD</span> <span class="o">./</span><span class="n">target</span><span class="o">/</span><span class="n">ROOT</span><span class="o">.</span><span class="n">war</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span><span class="o">/</span><span class="n">mybank</span><span class="o">.</span><span class="n">war</span>
+</pre></div>
+</div>
+<p>7 ） 执行Docker Build 构建镜像。把镜像命名为mybank-tomcat。在没有指定镜像的tag的请求下，默认的标签为latest 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker build -t mybank-tomcat .</span>
+<span class="n">Sending</span> <span class="n">build</span> <span class="n">context</span> <span class="n">to</span> <span class="n">Docker</span> <span class="n">daemon</span> <span class="mf">4.194</span> <span class="n">MB</span>
+<span class="n">Step</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">FROM</span> <span class="n">tomcat</span><span class="p">:</span><span class="mf">7.0</span><span class="o">.</span><span class="mi">70</span><span class="o">-</span><span class="n">jre7</span><span class="o">-</span><span class="n">alpine</span>
+ <span class="o">---&gt;</span> <span class="n">ffe5379d7563</span>
+<span class="n">Step</span> <span class="mi">2</span> <span class="p">:</span> <span class="n">ADD</span> <span class="o">./</span><span class="n">target</span><span class="o">/</span><span class="n">ROOT</span><span class="o">.</span><span class="n">war</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span><span class="o">/</span><span class="n">mybank</span><span class="o">.</span><span class="n">war</span>
+<span class="o">---&gt;</span> <span class="mi">113</span><span class="n">cc34fc0e4</span>
+<span class="n">Removing</span> <span class="n">intermediate</span> <span class="n">container</span> <span class="n">f04b6e3a9989</span>
+<span class="n">Successfully</span> <span class="n">built</span> <span class="mi">113</span><span class="n">cc34fc0e4</span>
+</pre></div>
+</div>
+<p>构建完毕后，可以看见刚才Docker Build生成的新镜像09cf49110ce2 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker images|grep mybank-tomcat</span>
+<span class="n">mybank</span><span class="o">-</span><span class="n">tomcat</span>                                                                         <span class="n">latest</span>                   <span class="mi">24</span><span class="n">fca8e8ad7a</span>        <span class="mi">56</span> <span class="n">seconds</span> <span class="n">ago</span>      <span class="mi">150</span><span class="n">MB</span>
+</pre></div>
+</div>
+<p>8 ） 测试镜像。通过docker run 命令测试新创建的镜像。这里通过参数-p 8080:8080 把容器的8080 端口映射到主机的8080 端口，以方便测试。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker run -it -p 8080:8080 mybank-tomcat</span>
+</pre></div>
+</div>
+<p>容器启动完毕后，可以通过curl 或浏览器测试应用是否工作正常。如果一起正常，通过浏览器访问My Bank 的主页就会看到一只可爱的小猪储蓄罐了。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span> <span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># curl http://master.example.com:8080/mybank/</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>此时单击MyBank应用主页的服务网点按钮将会出现报错页面。请别惊慌，因为这个页面依赖的数据库目前还没有创建。后续的章节中会解决这个问题。</p>
+</div>
+<p>9 ）推送镜像。测试通过后，下一步将把镜像发布到相应的镜像仓库中。先通过docker tag 创建指向目标镜像仓库的镜像名称，然后通过docker push 推送镜像至目标仓库。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span> <span class="n">l</span> <span class="c1"># docker tag my bank-tomcat:latest registry.your-registry.com/mybank-tomcat:latest</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># docker push registry.your-registry.com/mybank-tomcat:latest</span>
+</pre></div>
+</div>
+<p>通过以上的步骤完成了一个简单应用的容器化。在没有特殊需求的情况下，容器化过程不算复杂。但是在现实中是，每次应用更新后，总是需要构建一次镜像。在当前应用变更及交付节奏如此迅速的年代，如果这个过程通过人工来完成的话，这将会是一个非常大的负担。</p>
+</div>
+<div class="section" id="openshift">
+<h2>OpenShift 构建与部署自动化<a class="headerlink" href="#openshift" title="Permalink to this headline">¶</a></h2>
+<p>在OpenShift 上，应用的镜像构建和部署是自动化的。为了提升开发的效率， OpenShift提供了Source to Image ( S21 ）流程，帮助用户自动构建镜像。在S21 流程中， OpenShift 会下载应用的源代码，进行自动化的编译和构建，并将输出的应用部署包部署到容器中。最终S21 会输出一个包含应用和基础运行环境的崭新镜像。当S21 构建结束后， OpenShift 会自动触发一次部署，将S21 生成的镜像按一定的规则部署到集群中。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>S21 和应用开发语言没有直接的绑定。无论是脚本型的语言，如PHP , Ruby 、Python或Perl 等， 还是编译型的语言，如Java 、C 、C＋＋ 或Go 等，都支持通过S21 构建镜像。</p>
+</div>
+<p>在应用更新的场景中，开发用户提交代码到配置管理库。通过配置管理库向OpenShift发送消息触发构建，构建会下载更新的代码，并进行构建。构建完毕后，新的镜像更新到内部镜像仓库。随后，OpenShift将会进行更新部署，更新集群内的容器应用。</p>
+<p>一个典型的OpenShift应用构建及部署的流程如图5-1 所示。</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>开发工程师将应用源代码提交至配置管理库进行版本管理。</p></li>
+<li><p>用户创建应用。输入源代码仓库的地址；选择S21 构建的基础镜像（又称Builder 镜像） 。Builder 镜像中包含了操作系统、编程语言、框架等应用所需的软件及配置。OpenShift默认提供了多种编程语言的Builder 镜像，如Java 、PHP , Ruby 、Python 、Perl 等。用户也可以根据自身的需求定制自己的Builder 镜像，并发布到服务目录中供用户选用。</p></li>
+<li><p>用户或系统触发S2I构建。OpenShift将实例化S2I构建执行器。S21 构建执行器将从用户指定的代码仓库下载源代码并实例化Builder 镜像。源代码将会被注人实例化的Builder容器中。Builder 容器将根据预定义的逻辑执行源代码的编译、构建并完成部署。</p></li>
+<li><p>S2I 构建执行器将完成操作的Builder 镜像commit 成新的Docker 镜像。新的镜像被推送到OpenShift内部的镜像仓库。S21 构建执行器更新该次构建相关的Image Stream 信息。</p></li>
+<li><p>OpenShift感知到Image Stream 的变化后触发一个部署。应用的镜像被分发到具体的Node 节点，并实例化成容器。</p></li>
+</ol>
+</div></blockquote>
+<img alt="OpenShift核心组件及流程" src="../_images/cicd.jpg" />
+<p>图5-1 OpenShift核心组件及流程</p>
+<div class="section" id="id2">
+<h3>快速构建部署一个应用<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>前面通过于工的方式容器化了MyBank 应用。下面介绍如何通过OpenShift快速对MyBank应用进行容器化并部署。</p>
+<ol class="arabic simple">
+<li><p>以dev 用户登录OpenShift Web 控制台。创建一个名为my bank的项目，如图5-2 所示。</p></li>
+</ol>
+<img alt="创建项目" src="../_images/new_project_mybank.jpg" />
+<p>图5-2 创建项目</p>
+<p>2 ）切换到Developer视图，单击页面上方的+Add 按钮。在目录中选择From Git， 如图5-3 所示。</p>
+<img alt="选择Import form git" src="../_images/mybank_add.jpg" />
+<p>图5-3 选择Import form git</p>
+<p>3 ）在参数输入界面输入目标应用的源代码地址https://github.com/nichochen/mybank-demo-maven，Builder Image Version选择8，Resources选择Deployment Config，如图5-4 所示。</p>
+<img alt="输入应用源代码地址" src="../_images/mybank_input.jpg" />
+<p>图5-4 输入应用源代码地址</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>针对Java 应用， S21 默认调用项目Maven 的package 动作进行编译、构建和打包。用</p>
+</div>
+<p>一户也可以用自定义的S21 构建脚本，执行自定义的构建逻辑。比如许多老的项目不用</p>
+<p>4 ） 单击参数输入界面的Create 按钮后， OpenShift 就会创建一系列后台对象，进而触
+发S21 流程。单击部署完成页面的Continue to overview 链接，如图5-5 所示，转跳到
+项目主页。</p>
+<p>图5-5 完成应用创建</p>
+<p>在项目主页，可以看到MyBank 应用已经成功创建，有一个构建正在执行，如图5-6所示。</p>
+<p>图5-6 MyBank 应用成功创建</p>
+<p>稍等片刻后，应用就会构建、部署完毕。</p>
+<p>镜像，请确保实验机器能连接上互联网。</p>
+<p>5 ）单击界面上的V iew Log 链接，转跳到此次构建的日志页面，可见S21 在后台进行的一系列操作，如图5-8 所示。</p>
+<p>在S21 构建日志页面的最底部可以看到S21 构建的最后一步是将生成的镜像推送到内部的镜像仓库中，如图5-9 所示。</p>
+<p>此时如果检查实验主机本地的Docker 镜像列表，同样可以看见MyBank 应用的镜像。</p>
+<p>容器部署完毕，检查容器的状态，可以看见My Bank 应用容器的状态为Running 。</p>
+</div>
+<div class="section" id="build-config-build">
+<h3>镜像构建： Build Config 与Build<a class="headerlink" href="#build-config-build" title="Permalink to this headline">¶</a></h3>
+<p>在前文的示例中，用户只需要给出应用源代码的位置以及选定Builder 镜像，即可快速将应用从代码变成运行的实例。这个应用部署的过程对于用户来说是非常精简的，在这背后OpenShift自动生成了相关的对象来支撑这个流程。
+通过oc 命令行客户端以dev 用户登录到OpenShift。</p>
+<dl class="simple">
+<dt>::</dt><dd><p>[<a class="reference external" href="mailto:root&#37;&#52;&#48;master">root<span>&#64;</span>master</a> ~]# oc login -u dev</p>
+</dd>
+</dl>
+<p>Logged int 。” https : //192 . 168 . 172 . 167 : 84 4 3 ” as ” dev ” using exist i n g c r edentials .
+Using project ” my bank ” .</p>
+<p>在上一个示例中，当用户在参数输入界面单击Create 按钮后， OpenShift会创建一个名为Build Config （构建配置）的对象。通过oc get be 命令，用户可以看见OpenShift 为My Bank 应用创建的Build Config 。</p>
+<p>通过输出可见项目中存在一个名为mybank 的Build Config 。通过命令oc get bcmybank
+-o yaml ， 可以进一步获取这个Build Config 的具体配置信息。</p>
+<p>通过输出，可见Build config 中记录了前文示例引用的源代码地址和所选择的Builder 镜
+像的信息。
+酒、代码仓库信息如下：</p>
+<p>前文选择的Builder 镜像的信息如下：</p>
+<p>Builder 镜像没有直接指向某个实际的镜像地址，而是指向了一个Image Stream 。在前面
+的章节曾经提及， Open Shi 企定义了Image Stream 的概念来管理一组镜像的集合。在一个Image
+Strea m 中可以定义多个镜像名称和Tag ，然后再指向实际的Docker 镜像。
+output 属性定义了此次构建输出的镜像名。下面的配置定义了构建结果将会输出到一
+个名为myba nk:latest 的Image Stream 标签所指向的地址。</p>
+<p>通过oc get is mybank ，可以查看到这个名为mybank 的Image Stream 。这个Image
+S衍eam 是在部署应用时， OpenShift 在后台自动创建的。</p>
+<p>通过oc describe is mybank ， 可以查看该Image Stream 的详细信息。通过输出可以
+看到mybank: latest 这个Image Stream 标签实际指向了镜像17 2 .30.156. 27 :5000 / mybank /
+<a class="reference external" href="mailto:mybank&#37;&#52;&#48;sha256">mybank<span>&#64;</span>sha256</a> : 93131da2912da8 。</p>
+<p>Build Config 只是静态的配置信息。OpenShift 根据这个静态的配置信息可以触发多次实
+际的构建实例，构建的实例称为Build 。一个Build Config 可以被多次触发， 生产多个Build 。
+通过oc get build 命令，可以看到列表中已经有了一次构建记录，这是Open Shi位在我们
+单击Create 按钮后自动触发的。</p>
+<p>执行oc logs build/mybank-1 命令，用户可以查看此次构建的详细信息。这与在
+Web 控制台看到的日志信息相同。
+如果想执行一次新的部署，可以执行oc new-build mybank 命令。</p>
+<p>再次查看oc get build 的结果，将会发现多了一条mybank-2 的构建记录。</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Murphy
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

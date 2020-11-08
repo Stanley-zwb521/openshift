@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. 容器应用的构建与部署自动化</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. 持续集成与部署" href="持续集成与部署.html" />
+    <link rel="prev" title="4. OpenShift 企业部署" href="OpenShift企业部署.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/sphinx.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录：</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="容器云概述.html">1. 开源容器云概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="初探OpenShift容器云.html">2. 初探OpenShift容器云</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift架构探秘.html">3. OpenShift 架构探秘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift企业部署.html">4. OpenShift 企业部署</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. 容器应用的构建与部署自动化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#java">5.1. 一个Java 应用的容器化之旅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#openshift">5.2. OpenShift 构建与部署自动化</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">5.2.1. 快速构建部署一个应用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-config-build">5.2.2. 镜像构建： Build Config 与Build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deployment-config-deploy">5.2.3. 镜像部署： Deployment Config 与Deploy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#service-route">5.2.4. 服务连通： Service 与Route</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">5.3. 弹性伸缩</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#replication-controller">5.3.1. Replication Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">5.3.2. 扩展容器实例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">5.3.3. 状态自恢复</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id8">5.4. 应用更新发布</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id9">5.4.1. 触发更新构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10">5.4.2. 更新部署</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">5.5. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="持续集成与部署.html">6. 持续集成与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用的微服务化.html">7. 应用的微服务化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用数据持久化.html">8. 应用数据持久化</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nest</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+                   
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+    <ul class="wy-breadcrumbs">
+        
+        <li><a href="../index.html">首页</a> &raquo;</li>
+        
+        <li><span class="section-number">5. </span>容器应用的构建与部署自动化</li>
+         
+        <li class="wy-breadcrumbs-aside">
+            <a href="https://pages.github.ibm.com/fsd-training/cvitube" class="fa fa-github"> CVITube</a>  
+            <a href="../_sources/pages/容器应用的构建与部署自动化.md.txt" rel="nofollow"> View page source</a>  
+        </li>
+        
+    </ul>
+
+    
+    <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">5. </span>容器应用的构建与部署自动化<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>有人认为容器的世界非常美妙， 一切都唾手可得。当我们需要一个MySQL 时，只需要运行一个MySQL 的镜像，稍等片刻， MySQL 的服务就可以使用了。当我们的项目需要持续集成服务时，只需要启动一个Jenkins 镜像便万事大吉了。但是现实是， MySQL 和Jenkins都是“别人家的应用”。企业自身开发的应用并没有现成的镜像可以直接下载。用户必须自行负责应用的容器化，自行构建应用的镜像。接下来将通过对一个Java 应用进行容器化，探究应用容器化的步骤和注意事项。</p>
+<div class="section" id="java">
+<h2><span class="section-number">5.1. </span>一个Java 应用的容器化之旅<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h2>
+<p>本节把一个简单的Java Web 应用 - My Bank 进行容器化。MyBank 是一个非常简单和典型的Java Web 应用。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>它包含了Java 源代码、JSP 文件、图片和CSS 等静态资源文件。</p></li>
+<li><p>MyBank 的项目结构是基于Maven 的要求布置的，通过Maven 可以编译和构建My Bank 的部署包一WAR 包。</p></li>
+<li><p>和其他的应用程序一样， MyBank 在开发过程中，它的所有源代码都被上传到了配置管理库进行版本控制。这里所用的配置管理服务器是GitHub 。</p></li>
+</ul>
+</div></blockquote>
+<p>下面开始容器化这个应用。</p>
+<p>1 ）首先安装源代码工具Git。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="c1"># yum install -y git</span>
+</pre></div>
+</div>
+<p>2 ）从GitHub 上下载示例的Java 应用源代码。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># cd /opt</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span><span class="p">]</span><span class="c1"># git clone https://github.com/nichochen/mybank-demo-maven</span>
+</pre></div>
+</div>
+<p>3 ）准备编译和构建环境。安装应用构建所需的Java 开发工具包JDK 及构建工具Maven 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span> <span class="p">]</span> <span class="c1"># yum install -y maven</span>
+</pre></div>
+</div>
+<p>4 ）通过构建工具编译及构建应用。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span><span class="p">]</span><span class="c1"># cd mybank-demo-maven/</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># mvn package</span>
+</pre></div>
+</div>
+<p>构建完毕后，将在target 目录下生成一个WAR 包ROOT.war 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># ls target/</span>
+<span class="n">classes</span>  <span class="n">maven</span><span class="o">-</span><span class="n">archiver</span>  <span class="n">maven</span><span class="o">-</span><span class="n">status</span>  <span class="n">ROOT</span>  <span class="n">ROOT</span><span class="o">.</span><span class="n">war</span>  <span class="n">surefire</span><span class="o">-</span><span class="n">reports</span>  <span class="n">test</span><span class="o">-</span><span class="n">classes</span>
+</pre></div>
+</div>
+<p>5 ）选择满足应用运行要求的基础容器镜像，或者从基础的操作系统镜像开始安装和构建。为了方便，这里选择Tomcat 7 的官方镜像tomcat:7.0.70-jre7-alpine 。一般推荐预先把镜像下载到本地，以方便本地调试。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker pull tomcat:7.0.70-jre7-alpine</span>
+</pre></div>
+</div>
+<p>6 ）编写Dockerfile 。这个例子中我们的逻辑比较简单就是把构建好的应用部署包拷贝
+到发布目录。Dockerfile 示例如下。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span> <span class="c1"># cat Dockerfile</span>
+<span class="n">FROM</span> <span class="n">tomcat</span><span class="p">:</span><span class="mf">7.0</span><span class="o">.</span><span class="mi">70</span><span class="o">-</span><span class="n">jre7</span><span class="o">-</span><span class="n">alpine</span>
+<span class="n">ADD</span> <span class="o">./</span><span class="n">target</span><span class="o">/</span><span class="n">ROOT</span><span class="o">.</span><span class="n">war</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span><span class="o">/</span><span class="n">mybank</span><span class="o">.</span><span class="n">war</span>
+</pre></div>
+</div>
+<p>7 ） 执行Docker Build 构建镜像。把镜像命名为mybank-tomcat。在没有指定镜像的tag的请求下，默认的标签为latest 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker build -t mybank-tomcat .</span>
+<span class="n">Sending</span> <span class="n">build</span> <span class="n">context</span> <span class="n">to</span> <span class="n">Docker</span> <span class="n">daemon</span> <span class="mf">4.194</span> <span class="n">MB</span>
+<span class="n">Step</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">FROM</span> <span class="n">tomcat</span><span class="p">:</span><span class="mf">7.0</span><span class="o">.</span><span class="mi">70</span><span class="o">-</span><span class="n">jre7</span><span class="o">-</span><span class="n">alpine</span>
+ <span class="o">---&gt;</span> <span class="n">ffe5379d7563</span>
+<span class="n">Step</span> <span class="mi">2</span> <span class="p">:</span> <span class="n">ADD</span> <span class="o">./</span><span class="n">target</span><span class="o">/</span><span class="n">ROOT</span><span class="o">.</span><span class="n">war</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span><span class="o">/</span><span class="n">mybank</span><span class="o">.</span><span class="n">war</span>
+<span class="o">---&gt;</span> <span class="mi">113</span><span class="n">cc34fc0e4</span>
+<span class="n">Removing</span> <span class="n">intermediate</span> <span class="n">container</span> <span class="n">f04b6e3a9989</span>
+<span class="n">Successfully</span> <span class="n">built</span> <span class="mi">113</span><span class="n">cc34fc0e4</span>
+</pre></div>
+</div>
+<p>构建完毕后，可以看见刚才Docker Build生成的新镜像09cf49110ce2 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker images|grep mybank-tomcat</span>
+<span class="n">mybank</span><span class="o">-</span><span class="n">tomcat</span>                                                                         <span class="n">latest</span>                   <span class="mi">24</span><span class="n">fca8e8ad7a</span>        <span class="mi">56</span> <span class="n">seconds</span> <span class="n">ago</span>      <span class="mi">150</span><span class="n">MB</span>
+</pre></div>
+</div>
+<p>8 ） 测试镜像。通过docker run 命令测试新创建的镜像。这里通过参数-p 8080:8080 把容器的8080 端口映射到主机的8080 端口，以方便测试。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># docker run -it -p 8080:8080 mybank-tomcat</span>
+</pre></div>
+</div>
+<p>容器启动完毕后，可以通过curl 或浏览器测试应用是否工作正常。如果一起正常，通过浏览器访问My Bank 的主页就会看到一只可爱的小猪储蓄罐了。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@mastermybank</span> <span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="p">]</span><span class="c1"># curl http://master.example.com:8080/mybank/</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>此时单击MyBank应用主页的服务网点按钮将会出现报错页面。请别惊慌，因为这个页面依赖的数据库目前还没有创建。后续的章节中会解决这个问题。</p>
+</div>
+<p>9 ）推送镜像。测试通过后，下一步将把镜像发布到相应的镜像仓库中。先通过docker tag 创建指向目标镜像仓库的镜像名称，然后通过docker push 推送镜像至目标仓库。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span> <span class="n">l</span> <span class="c1"># docker tag my bank-tomcat:latest registry.your-registry.com/mybank-tomcat:latest</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># docker push registry.your-registry.com/mybank-tomcat:latest</span>
+</pre></div>
+</div>
+<p>通过以上的步骤完成了一个简单应用的容器化。在没有特殊需求的情况下，容器化过程不算复杂。但是在现实中是，每次应用更新后，总是需要构建一次镜像。在当前应用变更及交付节奏如此迅速的年代，如果这个过程通过人工来完成的话，这将会是一个非常大的负担。</p>
+</div>
+<div class="section" id="openshift">
+<h2><span class="section-number">5.2. </span>OpenShift 构建与部署自动化<a class="headerlink" href="#openshift" title="Permalink to this headline">¶</a></h2>
+<p>在OpenShift 上，应用的镜像构建和部署是自动化的。为了提升开发的效率， OpenShift提供了Source to Image ( S2I ）流程，帮助用户自动构建镜像。在S2I 流程中， OpenShift 会下载应用的源代码，进行自动化的编译和构建，并将输出的应用部署包部署到容器中。最终S2I 会输出一个包含应用和基础运行环境的崭新镜像。当S2I 构建结束后， OpenShift 会自动触发一次部署，将S2I 生成的镜像按一定的规则部署到集群中。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>S2I 和应用开发语言没有直接的绑定。无论是脚本型的语言，如PHP , Ruby 、Python或Perl 等， 还是编译型的语言，如Java 、C 、C＋＋ 或Go 等，都支持通过S2I 构建镜像。</p>
+</div>
+<p>在应用更新的场景中，开发用户提交代码到配置管理库。通过配置管理库向OpenShift发送消息触发构建，构建会下载更新的代码，并进行构建。构建完毕后，新的镜像更新到内部镜像仓库。随后，OpenShift将会进行更新部署，更新集群内的容器应用。</p>
+<p>一个典型的OpenShift应用构建及部署的流程如图5-1 所示。</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>开发工程师将应用源代码提交至配置管理库进行版本管理。</p></li>
+<li><p>用户创建应用。输入源代码仓库的地址；选择S2I 构建的基础镜像（又称Builder 镜像） 。Builder 镜像中包含了操作系统、编程语言、框架等应用所需的软件及配置。OpenShift默认提供了多种编程语言的Builder 镜像，如Java 、PHP , Ruby 、Python 、Perl 等。用户也可以根据自身的需求定制自己的Builder 镜像，并发布到服务目录中供用户选用。</p></li>
+<li><p>用户或系统触发S2I构建。OpenShift将实例化S2I构建执行器。S2I 构建执行器将从用户指定的代码仓库下载源代码并实例化Builder 镜像。源代码将会被注人实例化的Builder容器中。Builder 容器将根据预定义的逻辑执行源代码的编译、构建并完成部署。</p></li>
+<li><p>S2I 构建执行器将完成操作的Builder 镜像commit 成新的Docker 镜像。新的镜像被推送到OpenShift内部的镜像仓库。S2I 构建执行器更新该次构建相关的Image Stream 信息。</p></li>
+<li><p>OpenShift感知到Image Stream 的变化后触发一个部署。应用的镜像被分发到具体的Node 节点，并实例化成容器。</p></li>
+</ol>
+</div></blockquote>
+<img alt="OpenShift核心组件及流程" src="../_images/cicd.jpg" />
+<p>图5-1 OpenShift核心组件及流程</p>
+<div class="section" id="id2">
+<h3><span class="section-number">5.2.1. </span>快速构建部署一个应用<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>前面通过于工的方式容器化了MyBank 应用。下面介绍如何通过OpenShift快速对MyBank应用进行容器化并部署。</p>
+<ol class="arabic simple">
+<li><p>以dev 用户登录OpenShift Web 控制台。创建一个名为my bank的项目，如图5-2 所示。</p></li>
+</ol>
+<img alt="创建项目" src="../_images/new_project_mybank.jpg" />
+<p>图5-2 创建项目</p>
+<p>2 ）切换到Developer视图，单击页面上方的+Add 按钮。在目录中选择From Catalog， 如图5-3 所示。</p>
+<img alt="选择From Catalog" src="../_images/mybank_add.jpg" />
+<p>图5-3 选择From Catalog</p>
+<p>3 ）在“Filter by keyword…”里输入“Tomcat8”。在服务目录中选择JBoss Web Server 3.1 Apache Tomcat 8 (no https)，如图5-4所示。</p>
+<img alt="选择Builder 镜像" src="../_images/tomcat_template.jpg" />
+<p>图5-4 选择Builder 镜像</p>
+<p>4 ）在参数输入界面，Git Repository URL输入地址https://github.com/nichochen/mybank-demo-maven，Git Reference输入master，Context Directory为空值， 最后点击Create按钮。如图5-5 所示。</p>
+<img alt="输入应用源代码地址" src="../_images/S2I_create.jpg" />
+<p>图5-5 输入应用源代码地址</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>针对Java 应用， S2I 默认调用项目Maven 的package 动作进行编译、构建和打包。用户也可以用自定义的S21 构建脚本，执行自定义的构建逻辑。比如许多老的项目不用Maven，而使用Ant进行构建。</p>
+</div>
+<p>5 ） 单击参数输入界面的Create 按钮后， OpenShift 就会创建一系列后台对象，进而触发S2I 流程。 单击拓扑图DC jws-app图标， 右边会显示该应用的DC信息。</p>
+<p>在DC页面，可以看到MyBank 应用已经成功创建，有一个构建正在执行，如图5-6所示。</p>
+<img alt="MyBank 应用成功创建" src="../_images/mybank_build.jpg" />
+<p>图5-6 MyBank 应用成功创建</p>
+<p>稍等片刻后，应用就会构建、部署完毕。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>构建的过程需要连接互联网下载应用的源代码、Maven 构建所需的Jar 包以及Builder镜像，请确保实验机器能连接上互联网。</p>
+</div>
+<p>6 ）单击界面上的View Log 链接，转跳到此次构建的日志页面，可见S2I 在后台进行的一系列操作。 在S2I 构建日志页面的最底部可以看到S2I 构建的最后一步是将生成的镜像推送到内部的镜像仓库中。</p>
+<p>此时如果检查实验主机本地的Docker 镜像列表，同样可以看见MyBank 应用的镜像。</p>
+<p>容器部署完毕，检查容器的状态，可以看见MyBank 应用容器的状态为Running 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get pods
+NAME               READY   STATUS      RESTARTS   AGE
+jws-app-1-6wb9x    1/1     Running     0          12m
+jws-app-1-build    0/1     Completed   0          13m
+jws-app-1-deploy   0/1     Completed   0          12m
+</pre></div>
+</div>
+<p>7 ）最后可以点击DC页面的路由超链接， 访问该应用的主页。</p>
+</div>
+<div class="section" id="build-config-build">
+<h3><span class="section-number">5.2.2. </span>镜像构建： Build Config 与Build<a class="headerlink" href="#build-config-build" title="Permalink to this headline">¶</a></h3>
+<p>在前文的示例中，用户只需要给出应用源代码的位置以及选定Builder 镜像，即可快速将应用从代码变成运行的实例。这个应用部署的过程对于用户来说是非常精简的，在这背后OpenShift自动生成了相关的对象来支撑这个流程。</p>
+<p>通过oc 命令行客户端以dev 用户登录到OpenShift。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc login -u dev</span>
+<span class="n">Logged</span> <span class="n">into</span> <span class="s2">&quot;https://192.168.172.167:8443&quot;</span> <span class="k">as</span> <span class="s2">&quot;dev&quot;</span> <span class="n">using</span> <span class="n">existing</span> <span class="n">credentials</span> <span class="o">.</span>
+<span class="n">Using</span> <span class="n">project</span> <span class="s2">&quot;my bank&quot;</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>在上一个示例中，当用户在参数输入界面单击Create 按钮后， OpenShift会创建一个名为Build Config （构建配置）的对象。通过oc get bc 命令，用户可以看见OpenShift 为jws-app 应用创建的Build Config 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get bc
+NAME      TYPE     FROM         LATEST
+jws-app   Source   Git@master   1
+</pre></div>
+</div>
+<p>通过输出可见项目中存在一个名为mybank 的Build Config 。通过命令oc get bc jws-app -o yaml ， 可以进一步获取这个Build Config 的具体配置信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apiVersion</span><span class="p">:</span> <span class="n">build</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">BuildConfig</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">creationTimestamp</span><span class="p">:</span> <span class="s2">&quot;2020-08-15T14:24:31Z&quot;</span>
+  <span class="n">labels</span><span class="p">:</span>
+    <span class="n">application</span><span class="p">:</span> <span class="n">jws</span><span class="o">-</span><span class="n">app</span>
+    <span class="n">jws31</span><span class="p">:</span> <span class="s2">&quot;1.4&quot;</span>
+    <span class="n">template</span><span class="p">:</span> <span class="n">jws31</span><span class="o">-</span><span class="n">tomcat8</span><span class="o">-</span><span class="n">basic</span><span class="o">-</span><span class="n">s2i</span>
+    <span class="n">template</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">template</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="n">owner</span><span class="p">:</span> <span class="n">fee9ca06</span><span class="o">-</span><span class="n">ef36</span><span class="o">-</span><span class="mi">4</span><span class="n">a3a</span><span class="o">-</span><span class="n">b5e2</span><span class="o">-</span><span class="mi">07</span><span class="n">c3cc7d9dea</span>
+  <span class="n">name</span><span class="p">:</span> <span class="n">jws</span><span class="o">-</span><span class="n">app</span>
+  <span class="n">namespace</span><span class="p">:</span> <span class="n">mybank</span>
+  <span class="n">resourceVersion</span><span class="p">:</span> <span class="s2">&quot;313404&quot;</span>
+  <span class="n">selfLink</span><span class="p">:</span> <span class="o">/</span><span class="n">apis</span><span class="o">/</span><span class="n">build</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">namespaces</span><span class="o">/</span><span class="n">mybank</span><span class="o">/</span><span class="n">buildconfigs</span><span class="o">/</span><span class="n">jws</span><span class="o">-</span><span class="n">app</span>
+  <span class="n">uid</span><span class="p">:</span> <span class="mf">628e3</span><span class="n">b76</span><span class="o">-</span><span class="n">b60a</span><span class="o">-</span><span class="mf">4e45</span><span class="o">-</span><span class="mf">8e5</span><span class="n">c</span><span class="o">-</span><span class="mi">1</span><span class="n">aa9b0aff99d</span>
+<span class="n">spec</span><span class="p">:</span>
+  <span class="n">failedBuildsHistoryLimit</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="n">nodeSelector</span><span class="p">:</span> <span class="n">null</span>
+  <span class="n">output</span><span class="p">:</span>
+    <span class="n">to</span><span class="p">:</span>
+      <span class="n">kind</span><span class="p">:</span> <span class="n">ImageStreamTag</span>
+      <span class="n">name</span><span class="p">:</span> <span class="n">jws</span><span class="o">-</span><span class="n">app</span><span class="p">:</span><span class="n">latest</span>
+  <span class="n">postCommit</span><span class="p">:</span> <span class="p">{}</span>
+  <span class="n">resources</span><span class="p">:</span> <span class="p">{}</span>
+  <span class="n">runPolicy</span><span class="p">:</span> <span class="n">Serial</span>
+  <span class="n">source</span><span class="p">:</span>
+    <span class="n">git</span><span class="p">:</span>
+      <span class="n">ref</span><span class="p">:</span> <span class="n">master</span>
+      <span class="n">uri</span><span class="p">:</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">nichochen</span><span class="o">/</span><span class="n">mybank</span><span class="o">-</span><span class="n">demo</span><span class="o">-</span><span class="n">maven</span><span class="o">.</span><span class="n">git</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Git</span>
+  <span class="n">strategy</span><span class="p">:</span>
+    <span class="n">sourceStrategy</span><span class="p">:</span>
+      <span class="n">env</span><span class="p">:</span>
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">MAVEN_MIRROR_URL</span>
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">ARTIFACT_DIR</span>
+      <span class="n">forcePull</span><span class="p">:</span> <span class="n">true</span>
+      <span class="n">from</span><span class="p">:</span>
+        <span class="n">kind</span><span class="p">:</span> <span class="n">ImageStreamTag</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">jboss</span><span class="o">-</span><span class="n">webserver31</span><span class="o">-</span><span class="n">tomcat8</span><span class="o">-</span><span class="n">openshift</span><span class="p">:</span><span class="mf">1.4</span>
+        <span class="n">namespace</span><span class="p">:</span> <span class="n">openshift</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Source</span>
+  <span class="n">successfulBuildsHistoryLimit</span><span class="p">:</span> <span class="mi">5</span>
+  <span class="n">triggers</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">github</span><span class="p">:</span>
+      <span class="n">secret</span><span class="p">:</span> <span class="n">osyJXhuk</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">GitHub</span>
+  <span class="o">-</span> <span class="n">generic</span><span class="p">:</span>
+      <span class="n">secret</span><span class="p">:</span> <span class="n">F7MKNRhC</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Generic</span>
+  <span class="o">-</span> <span class="n">imageChange</span><span class="p">:</span>
+      <span class="n">lastTriggeredImageID</span><span class="p">:</span> <span class="n">image</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">openshift</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">openshift</span><span class="o">/</span><span class="n">jboss</span><span class="o">-</span><span class="n">webserver31</span><span class="o">-</span><span class="n">tomcat8</span><span class="o">-</span><span class="n">openshift</span><span class="nd">@sha256</span><span class="p">:</span><span class="mi">2523697</span><span class="n">eaf80080238fe5ff904296ebe6549a45b3f52a5b42c72771fea1697df</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">ImageChange</span>
+  <span class="o">-</span> <span class="nb">type</span><span class="p">:</span> <span class="n">ConfigChange</span>
+<span class="n">status</span><span class="p">:</span>
+  <span class="n">lastVersion</span><span class="p">:</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>通过输出，可见Build config 中记录了前文示例引用的源代码地址和所选择的Builder 镜像的信息。</p>
+<p>源代码仓库信息如下：
+source:
+git:</p>
+<blockquote>
+<div><p>ref: master
+uri: <a class="reference external" href="https://github.com/nichochen/mybank-demo-maven.git">https://github.com/nichochen/mybank-demo-maven.git</a></p>
+</div></blockquote>
+<p>type: Git</p>
+<p>前文选择的Builder 镜像的信息如下：</p>
+<dl>
+<dt>sourceStrategy:</dt><dd><blockquote>
+<div><dl class="simple">
+<dt>from:</dt><dd><p>kind: ImageStreamTag
+name: jboss-webserver31-tomcat8-openshift:1.4
+namespace: openshift</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>type: Source</p>
+</dd>
+</dl>
+<p>Builder 镜像没有直接指向某个实际的镜像地址，而是指向了一个Image Stream 。在前面的章节曾经提及， OpenShift定义了Image Stream 的概念来管理一组镜像的集合。在一个Image Stream中可以定义多个镜像名称和Tag ，然后再指向实际的Docker 镜像。</p>
+<p>output 属性定义了此次构建输出的镜像名。下面的配置定义了构建结果将会输出到一个名为jws-app:latest 的Image Stream 标签所指向的地址。</p>
+<blockquote>
+<div><dl class="simple">
+<dt>output:</dt><dd><dl class="simple">
+<dt>to:</dt><dd><p>kind: ImageStreamTag
+name: jws-app:latest</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p>通过oc get is，可以查看到这个名为jws-app 的Image Stream 。这个Image Stream 是在部署应用时， OpenShift 在后台自动创建的。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get is
+NAME      IMAGE REPOSITORY                                                         TAGS     UPDATED
+jws-app   default-route-openshift-image-registry.apps-crc.testing/mybank/jws-app   latest   26 minutes ago
+</pre></div>
+</div>
+<p>通过oc describe is jws-app ，可以查看该Image Stream 的详细信息。通过输出可以看到jws-app:latest 这个Image Stream 标签实际指向了镜像image-registry.openshift-image-registry.svc:5000/mybank/jws-app&#64;sha256:a58fe29c96cf6c405b260b169710d4feb472018ca911c440d4ee89972caf471b</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc describe is jws-app
+Name:                   jws-app
+Namespace:              mybank
+Created:                29 minutes ago
+Labels:                 application=jws-app
+                        jws31=1.4
+                        template=jws31-tomcat8-basic-s2i
+                        template.openshift.io/template-instance-owner=fee9ca06-ef36-4a3a-b5e2-07c3cc7d9dea
+Annotations:            &lt;none&gt;
+Image Repository:       default-route-openshift-image-registry.apps-crc.testing/mybank/jws-app
+Image Lookup:           local=false
+Unique Images:          1
+Tags:                   1
+
+latest
+  no spec tag
+
+  * image-registry.openshift-image-registry.svc:5000/mybank/jws-app@sha256:a58fe29c96cf6c405b260b169710d4feb472018ca911c440d4ee89972caf471b
+      28 minutes ago
+</pre></div>
+</div>
+<p>Build Config 只是静态的配置信息。OpenShift 根据这个静态的配置信息可以触发多次实际的构建实例，构建的实例称为Build 。一个Build Config 可以被多次触发， 生产多个Build 。通过oc get build 命令，可以看到列表中已经有了一次构建记录，这是OpenShift在我们单击Create 按钮后自动触发的。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get build
+NAME        TYPE     FROM          STATUS     STARTED          DURATION
+jws-app-1   Source   Git@d5837f1   Complete   32 minutes ago   1m16s
+</pre></div>
+</div>
+<p>执行oc logs build/jws-app-1 命令，用户可以查看此次构建的详细信息。这与在Web 控制台看到的日志信息相同。</p>
+<p>如果想执行一次新的部署，可以执行oc start-build jws-app 命令。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc start-build jws-app
+build.build.openshift.io/jws-app-2 started
+</pre></div>
+</div>
+<p>再次查看oc get build 的结果，将会发现多了一条jaw-app-2 的构建记录。</p>
+</div>
+<div class="section" id="deployment-config-deploy">
+<h3><span class="section-number">5.2.3. </span>镜像部署： Deployment Config 与Deploy<a class="headerlink" href="#deployment-config-deploy" title="Permalink to this headline">¶</a></h3>
+<p>前文查看Build Config 定义时，可以看到output 部分定义了输出的镜像所指向的Image Stream的名字。这个Build Config 指向的Image Stream 是在创建部署时， OpenShift为jws-app 应用创建的。S2I 流程完成后，生成的应用镜像会被推送到内部镜像仓库。同时，更新相关的Image Stream ，把jaw-app:latest 指向镜像所在镜像仓库的实际位置。</p>
+<p>执行命令oc describe is jaw-app 可以查看Image Stream 标签的实际指向。因为之前触发了两次构建，所以在latest 标签的历史记录中可以看到有两条镜像的信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc describe is jws-app
+Name:                   jws-app
+Namespace:              mybank
+Created:                36 minutes ago
+Labels:                 application=jws-app
+                        jws31=1.4
+                        template=jws31-tomcat8-basic-s2i
+                        template.openshift.io/template-instance-owner=fee9ca06-ef36-4a3a-b5e2-07c3cc7d9dea
+Annotations:            &lt;none&gt;
+Image Repository:       default-route-openshift-image-registry.apps-crc.testing/mybank/jws-app
+Image Lookup:           local=false
+Unique Images:          2
+Tags:                   1
+
+latest
+  no spec tag
+
+  * image-registry.openshift-image-registry.svc:5000/mybank/jws-app@sha256:7fff2607176eb4a52539dad3baf4f1736f306c9da7af737dd107e94fe96279ce
+      39 seconds ago
+    image-registry.openshift-image-registry.svc:5000/mybank/jws-app@sha256:a58fe29c96cf6c405b260b169710d4feb472018ca911c440d4ee89972caf471b
+      34 minutes ago
+</pre></div>
+</div>
+<p>当Image Stream 的标签更新后， OpenShift 就会触发一次部署。和构建一样，部署也有配置定义对象： Deployment Config 。Deployment Config 描述了镜像部署的参数和要求。通过oc get dc 命令可以查看项目中的Deployment Config 列表。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get dc
+NAME      REVISION   DESIRED   CURRENT   TRIGGERED BY
+jws-app   2          1         1         config,image(jws-app:latest)
+</pre></div>
+</div>
+<p>执行oc get dc jws-app -o yaml 命令，可以查看该Deployment Config 的详细定义。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get dc jws-app -o yaml
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: &quot;2020-08-15T14:24:31Z&quot;
+  generation: 3
+  labels:
+    application: jws-app
+    jws31: &quot;1.4&quot;
+    template: jws31-tomcat8-basic-s2i
+    template.openshift.io/template-instance-owner: fee9ca06-ef36-4a3a-b5e2-07c3cc7d9dea
+  name: jws-app
+  namespace: mybank
+  resourceVersion: &quot;318000&quot;
+  selfLink: /apis/apps.openshift.io/v1/namespaces/mybank/deploymentconfigs/jws-app
+  uid: 1dd45924-27eb-4832-881b-7aad1680cebd
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    deploymentConfig: jws-app
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        application: jws-app
+        deploymentConfig: jws-app
+      name: jws-app
+    spec:
+      containers:
+      - env:
+        - name: JWS_ADMIN_USERNAME
+          value: VgjmANTs
+        - name: JWS_ADMIN_PASSWORD
+          value: Ty70aKYj
+        image: image-registry.openshift-image-registry.svc:5000/mybank/jws-app@sha256:7fff2607176eb4a52539dad3baf4f1736f306c9da7af737dd107e94fe96279ce
+        imagePullPolicy: Always
+        name: jws-app
+        ports:
+        - containerPort: 8778
+          name: jolokia
+          protocol: TCP
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - curl --noproxy &#39;*&#39; -s -u VgjmANTs:Ty70aKYj &#39;http://localhost:8080/manager/jmxproxy/?get=Catalina%3Atype%3DServer&amp;att=stateName&#39;
+              |grep -iq &#39;stateName *= *STARTED&#39;
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 60
+  test: false
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - jws-app
+      from:
+        kind: ImageStreamTag
+        name: jws-app:latest
+        namespace: mybank
+      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/mybank/jws-app@sha256:7fff2607176eb4a52539dad3baf4f1736f306c9da7af737dd107e94fe96279ce
+    type: ImageChange
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: &quot;2020-08-15T15:00:26Z&quot;
+    lastUpdateTime: &quot;2020-08-15T15:00:26Z&quot;
+    message: Deployment config has minimum availability.
+    status: &quot;True&quot;
+    type: Available
+  - lastTransitionTime: &quot;2020-08-15T15:00:14Z&quot;
+    lastUpdateTime: &quot;2020-08-15T15:00:27Z&quot;
+    message: replication controller &quot;jws-app-2&quot; successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: &quot;True&quot;
+    type: Progressing
+  details:
+    causes:
+    - imageTrigger:
+        from:
+          kind: DockerImage
+          name: image-registry.openshift-image-registry.svc:5000/mybank/jws-app@sha256:7fff2607176eb4a52539dad3baf4f1736f306c9da7af737dd107e94fe96279ce
+      type: ImageChange
+    message: image change
+  latestVersion: 2
+  observedGeneration: 3
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1
+</pre></div>
+</div>
+<p>在Deployment Config 中，除了可以看见当前部署配置引用的镜像地址外，还可以看见该镜像部署传递的环境变量列表、容器对外暴露的端口等信息。以下为部署引用的镜像地址，与Image Stream jws-app 的latest 标签指向的地址值相匹配。</p>
+<p>在DeployConfig 中会定义Trigger （触发器），使部署在某些特定条件下自动触发，如S2I完成时。在mybank 的Deploy Config 中可以看见其中定义了一个ImageChange 的触发器，这个触发器的类型为ImageStrearnTag ，指向了jws-app:latest 。所以当MyBank 应用的S2I构建完成， Image Stream 中的latest 标签更新至最新的镜像地址时，该触发器就会被触发，根据该Deployment Conftg 的定义产生一次部署的实例。</p>
+<p>每个Deployment Config 可以被多次触发，每一次触发称为一个Deploy 。每一次Deploy都会生成一个Replication Controller 对象，用以监控容器的状态。Replication Contoller （复制
+控制器）是Kubernetes 中的一个组件，其负责监控容器的实际数量， 5.3.1 节会详细介绍。</p>
+<p>执行命令oc get rc 可以看到目前项目中有两个Replication Controller 实例，因为执行了两次构建，部署了两次。可以注意到Replication Controller jws-app-1 的DESIRED 和CURRENT 属性的值都是0 ，因为第一次部署的容器实例已经被第二次部署的实例替换了，所以当前没有实例在运行。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get rc
+NAME        DESIRED   CURRENT   READY   AGE
+jws-app-1   0         0         0       41m
+jws-app-2   1         1         1       7m25s
+</pre></div>
+</div>
+<p>在Deployment Config 中，可以定义容器运行的细节设置， 如容器的启动命令、容器可用的CPU和内存配置、容器的Liveness （检查容器是否在运行）及Readyness （检查服务是否就绪）检查。</p>
+</div>
+<div class="section" id="service-route">
+<h3><span class="section-number">5.2.4. </span>服务连通： Service 与Route<a class="headerlink" href="#service-route" title="Permalink to this headline">¶</a></h3>
+<p>在介绍OpenShift 架构时曾经提及容器的IP 地址在容器退出后就会释放，基于同一个镜像启动的新容器将会拥有一个新的IP。为了避免容器的IP 变化给第三方调用产生的影响， OpenShift 中使用了Service 对象进行解耦。Service 将有一个相对恒定的IP 地址。在部署MyBank 应用时，OpenShift会自动生成Deployment Config 对应的Service 。通过oc describe svc jws-app可以查看MyBank 应用的Service 信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc describe svc jws-app
+Name:              jws-app
+Namespace:         mybank
+Labels:            application=jws-app
+                   jws31=1.4
+                   template=jws31-tomcat8-basic-s2i
+                   template.openshift.io/template-instance-owner=fee9ca06-ef36-4a3a-b5e2-07c3cc7d9dea
+Annotations:       description: The web server&#39;s http port.
+Selector:          deploymentConfig=jws-app
+Type:              ClusterIP
+IP:                172.30.83.113
+Port:              &lt;unset&gt;  8080/TCP
+TargetPort:        8080/TCP
+Endpoints:         10.128.0.70:8080
+Session Affinity:  None
+Events:            &lt;none&gt;
+</pre></div>
+</div>
+<p>基于Service, OpenShift 同时也自动创建了对应的Route 。执行oc get route jws-app命令，可以查看MyBank 应用的Route 的详情。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc describe route jws-app
+Name:                   jws-app
+Namespace:              mybank
+Created:                48 minutes ago
+Labels:                 application=jws-app
+                        jws31=1.4
+                        template=jws31-tomcat8-basic-s2i
+                        template.openshift.io/template-instance-owner=fee9ca06-ef36-4a3a-b5e2-07c3cc7d9dea
+Description:            Route for application&#39;s http service.
+Annotations:            openshift.io/host.generated=true
+Requested Host:         jws-app-mybank.2886795286-80-host20nc.environments.katacoda.com
+                          exposed on router default (host apps-crc.testing) 48 minutes ago
+Path:                   &lt;none&gt;
+TLS Termination:        &lt;none&gt;
+Insecure Policy:        &lt;none&gt;
+Endpoint Port:          &lt;all endpoint ports&gt;
+
+Service:        jws-app
+Weight:         100 (100%)
+Endpoints:      10.128.0.70:8080
+</pre></div>
+</div>
+<p>OpenShift 自动生成一个域名jws-app-mybank.2886795286-80-host20nc.environments.katacoda.com,
+可以通过oc edit route 将其修改为用户希望使用的域名，如mybank.apps.example.com 。</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2><span class="section-number">5.3. </span>弹性伸缩<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>容器的一个很大的特点就是，其能较好地保证应用运行的一致性。相对于物理机部署和虚拟机部署，容器应用的启动速度较快，启动的成本较低。容器云平台上实现容器的弹性伸缩可以有效保证应用服务质量，也提高了数据中心资源的利用率。</p>
+<div class="section" id="replication-controller">
+<h3><span class="section-number">5.3.1. </span>Replication Controller<a class="headerlink" href="#replication-controller" title="Permalink to this headline">¶</a></h3>
+<p>在OpenShift 中，每一个部署的应用的容器实例数量在其Deployment Config 中定义。实际部署时， OpenShift 为每次的部署实例化一个Replication Controller ，并将该数值传递给相关联的Replication Controller 。Replication Controller 是Kubernetes 的一个组件，其负责维护容器实例的数量。</p>
+<p>通过oc get pod 命令，可以看到当前MyBank 应用的活动实例数为1 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get pods
+NAME               READY   STATUS      RESTARTS   AGE
+jws-app-1-build    0/1     Completed   0          51m
+jws-app-1-deploy   0/1     Completed   0          49m
+jws-app-2-bhk94    1/1     Running     0          15m
+jws-app-2-build    0/1     Completed   0          17m
+jws-app-2-deploy   0/1     Completed   0          15m
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>jws-app-<a href="#id4"><span class="problematic" id="id5">*</span></a>-build的容器状态为Completed，实际上已经不再运行了，可以忽略。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h3><span class="section-number">5.3.2. </span>扩展容器实例<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>通过Replication Controller ，可以快速控制容器实例的数量，调整容器集群的大小。</p>
+<p>执行oc scale dc jws-app –replicas=2 命令可以将MyBank 应用弹性伸缩至2个实例。</p>
+<p>片刻后再检查容器数量，会发现容器的数量已经从l 增加为2 了。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc scale dc jws-app --replicas=2
+deploymentconfig.apps.openshift.io/jws-app scaled
+
+$ oc get pods
+NAME               READY   STATUS      RESTARTS   AGE
+jws-app-1-build    0/1     Completed   0          53m
+jws-app-1-deploy   0/1     Completed   0          52m
+jws-app-2-bhk94    1/1     Running     0          18m
+jws-app-2-build    0/1     Completed   0          20m
+jws-app-2-deploy   0/1     Completed   0          18m
+jws-app-2-ncvm8    1/1     Running     0          9s
+</pre></div>
+</div>
+<p>查看Replication Controller 的状态，可以看到当前的容器数量已经被更新为2 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc get rc
+NAME        DESIRED   CURRENT   READY   AGE
+jws-app-1   0         0         0       53m
+jws-app-2   2         2         2       19m
+</pre></div>
+</div>
+</div>
+<div class="section" id="id7">
+<h3><span class="section-number">5.3.3. </span>状态自恢复<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>前面提到， Replication Controller 负责监控运行中容器的状态和数量。当实际运行的容器数量与部署定义的容器数量不同时， Replication Controller 将负责还原容器集群的状态至用户定义的状态。如当容器集群中的某个容器意外退出时， Replication Controller 将会启动一个新的容器实例以替代异常退出的容器实例。</p>
+<p>删除运行中的Pod ，让其中一个容器做出意外退出的假象， Replication Controller 将检测到这个问题，并自动启动一个新的容器实例以填补缺失。</p>
+<p>值得指出的是，在OpenShift上部署容器，不一定要定义Replication Controller 。可以直接部署一个Pod ，但是没有Replication Controller 监控的部署，在当前的Pod 退出后不会有新的Pod 启动来补充缺失。</p>
+</div>
+</div>
+<div class="section" id="id8">
+<h2><span class="section-number">5.4. </span>应用更新发布<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p>应用上线以后，事情还没有结束。市场的需求是永不停滞的，这意味着应用的更新也是无休止的。应用的更新部署和以往相比变得更加频繁。在容器时代，应用的更新也意味着镜像更新。通过人工方式完成应用镜像的构建和部署流程，效率低下，而且容易出错。因此，构建一个自动化的镜像和制定部署流程就变得尤为需要。</p>
+<div class="section" id="id9">
+<h3><span class="section-number">5.4.1. </span>触发更新构建<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p>OpenShft通过S2I 自动构建应用容器镜像。完成应用更新的修改，将变更提交至代码配置库后，便可在OpenShift触发一次构建。构建完成后便可触发一次部署，最终将当前在运行的容器实例更新为新的容器实例。在OpenShift中触发一个部署有两种方式：手动触发及WebHook 触发。</p>
+<p>用户可以选择在OpenShift的Web Console 中单击项目概览页面侧栏菜单中的Builds ，选择相应的Build Config 条目进入详情页面，单击页面右上角的Start Build按钮触发一次部署，也可以执行命令oc start-build &lt;BUILD CONFIG NAME&gt; 触发。</p>
+<p>此外，每个Build Config 都定义了两个WebHook 触发器。一个是GitHubWebHook ， 一个是Generic WebHook 。在MyBank 应用的Build Config 中，可以看到如下的GitHubWebHook和Generic WebHook 的触发器配置。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">triggers</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">github</span><span class="p">:</span>
+      <span class="n">secret</span><span class="p">:</span> <span class="n">osyJXhuk</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">GitHub</span>
+  <span class="o">-</span> <span class="n">generic</span><span class="p">:</span>
+      <span class="n">secret</span><span class="p">:</span> <span class="n">F7MKNRhC</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="n">Generic</span>
+</pre></div>
+</div>
+<p>这两个Webhook 的调用地址格式为：
+<a class="reference external" href="https:/">https:/</a>/&lt;MASTER 节点地址：端口&gt;/oapi/v1/namespaces/&lt;项目名&gt;/buildconfigs/&lt;Build
+Config名&gt;/webhooks/&lt;密码&gt;/&lt;类型&gt;</p>
+<p>我们的例子中， MyBank 应用的GitHub Webhook 的调用地址为：
+<a class="reference external" href="https://192.168.172.167:8443/oapi/v1/namespaces/mybank/buildconfigs/jws-app/webhooks/osyJXhuk/github">https://192.168.172.167:8443/oapi/v1/namespaces/mybank/buildconfigs/jws-app/webhooks/osyJXhuk/github</a></p>
+<p>Generic WebHook 的调用地址为：
+<a class="reference external" href="https://192.168.172.167:8443/oapi/v1/namespaces/mybank/buildconfigs/jws-app/webhooks/F7MKNRhC/generic">https://192.168.172.167:8443/oapi/v1/namespaces/mybank/buildconfigs/jws-app/webhooks/F7MKNRhC/generic</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>登录Web 控制台，在MyBank础的Build Config 的详情页面的Configuration 页签中也可以看到GitHubWebhook 和Generic Webhook 的地址。</p>
+</div>
+<p>Generic Webhook 的使用很简单，只需要向调用地址发送POST 请求即可触发，十分适
+合与第三方系统集成。</p>
+<p>GitHub Web hook 需要用户登录到GitHub，然后将GitHub Web hook 的地址配置到GitHub的仓库中。在企业的私有容器云中，由于环境安全隔离限制，企业内部使用GitHub Web Hook的做法不常见， Generic Webhook 更有现实的意义。</p>
+</div>
+<div class="section" id="id10">
+<h3><span class="section-number">5.4.2. </span>更新部署<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>构建结束后，更新部署被触发。OpenShift 的更新部署策略有Rolling 和Recreate 两种。</p>
+<p>Rolling （滚动更新）是指OpenShift 在部署时，会等一定数量的新版本容器实例启动完毕后，再终结一定数量的老版本容器实例，通过这种方式对容器集群中的实例进行逐一替换更新。滚动更新是OpenShift的默认更新方式，这种方式可以保证应用在更新发布的过程中不会出现服务中断。以下是MyBank 应用的Deployment Config 中关于更新策略的定义。</p>
+<p>OpenShift 提供的另一种部署方式为Recreate （重新创建） 。这种方式在更新时会将所有的老容器应用先停止，然后再启动一批新版本的容器实例。可以看到，jws-app应用使用的是Recreate的方式。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ oc describe dc jws-app
+Name:           jws-app
+Namespace:      mybank
+Created:        11 minutes ago
+Labels:         application=jws-app
+                jws31=1.4
+                template=jws31-tomcat8-basic-s2i
+                template.openshift.io/template-instance-owner=99137c6a-bb6f-42ad-9335-63c976878cc4
+Annotations:    &lt;none&gt;
+Latest Version: Not deployed
+Selector:       deploymentConfig=jws-app
+Replicas:       1
+Triggers:       Image(jws-app@latest, auto=true), Config
+Strategy:       Recreate
+Template:
+Pod Template:
+  Labels:       application=jws-app
+                deploymentConfig=jws-app
+  Containers:
+   jws-app:
+    Image:      jws-app
+    Ports:      8778/TCP, 8080/TCP
+    Host Ports: 0/TCP, 0/TCP
+    Readiness:  exec [/bin/bash -c curl --noproxy &#39;*&#39; -s -u URdOUVNg:Lsw0O13d &#39;http://localhost:8080/manager/jmxproxy/?get=Catalina%3Atype%3DServer&amp;att=stateName&#39; |grep -iq &#39;stateName *= *STARTED&#39;] delay=0s timeout=1s period=10s #success=1 #failure=3
+    Environment:
+      JWS_ADMIN_USERNAME:       URdOUVNg
+      JWS_ADMIN_PASSWORD:       Lsw0O13d
+    Mounts:                     &lt;none&gt;
+  Volumes:                      &lt;none&gt;
+
+Latest Deployment:      &lt;none&gt;
+
+Events: &lt;none&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id11">
+<h2><span class="section-number">5.5. </span>本章小结<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>本章围绕OpenShift 容器云的核心功能应用的构建和部署进行了详细的讨论。本章通过于工的方式容器化了一个Java 应用MyBank ，然后通过OpenShi 位完成了一次部署以进行对比。通过介绍后台对象Build Config 、Build 、Deployment Config 、Deploy 、Service 及Route ,了解了OpenShift 自动化构建及部署背后的细节。在讨论应用更新的环节，了解了两种构建触发器GitHub Webhook 和Gerice Webhook ，以及Rolling 和Recreate 两种部署策略。</p>
+<p>本章的内容为后续使用Open Shi 位容器平台解决实际工作中遇到的问题打下了基础。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="持续集成与部署.html" class="btn btn-neutral float-right" title="6. 持续集成与部署" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="OpenShift企业部署.html" class="btn btn-neutral float-left" title="4. OpenShift 企业部署" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Murphy
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

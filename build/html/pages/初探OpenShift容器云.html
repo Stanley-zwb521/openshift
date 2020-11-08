@@ -1,0 +1,629 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. 初探OpenShift容器云</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. OpenShift 架构探秘" href="OpenShift架构探秘.html" />
+    <link rel="prev" title="1. 开源容器云概述" href="容器云概述.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/sphinx.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录：</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="容器云概述.html">1. 开源容器云概述</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. 初探OpenShift容器云</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">2.1. 启动OpenShift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2.2. 运行第一个容器应用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">2.2.1. 创建项目</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker">2.2.2. 部署Docker 镜像</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">2.2.3. 访问容器应用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">2.2.4. 一些疑问</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">2.3. 完善OpenShift</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">2.3.1. 命令行工具</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">2.3.2. 以集群管理员登录</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#router-openshift-4">2.3.3. 添加Router (Openshift 4不适用)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#registry-openshift-4">2.3.4. 添加Registry (Openshift 4不适用)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#image-stream">2.3.5. 添加Image Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#template">2.3.6. 添加Template</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">2.4. 部署应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">2.5. 本章小节</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift架构探秘.html">3. OpenShift 架构探秘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift企业部署.html">4. OpenShift 企业部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="容器应用的构建与部署自动化.html">5. 容器应用的构建与部署自动化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="持续集成与部署.html">6. 持续集成与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用的微服务化.html">7. 应用的微服务化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用数据持久化.html">8. 应用数据持久化</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nest</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+                   
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+    <ul class="wy-breadcrumbs">
+        
+        <li><a href="../index.html">首页</a> &raquo;</li>
+        
+        <li><span class="section-number">2. </span>初探OpenShift容器云</li>
+         
+        <li class="wy-breadcrumbs-aside">
+            <a href="https://pages.github.ibm.com/fsd-training/cvitube" class="fa fa-github"> CVITube</a>  
+            <a href="../_sources/pages/初探OpenShift容器云.md.txt" rel="nofollow"> View page source</a>  
+        </li>
+        
+    </ul>
+
+    
+    <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="openshift">
+<h1><span class="section-number">2. </span>初探OpenShift容器云<a class="headerlink" href="#openshift" title="Permalink to this headline">¶</a></h1>
+<p>在前面的章节我们一起探讨了容器云的概念以及OpenShift 容器云项目的情况。理论联系实际，为了对OpenShift容器云有更直接的认识，本章将会帮助你快速地在自己的个人电脑上搭建一个可用的OpenShift的环境，并在这个环境上运行我们的第一个容器应用。这里假设你对Linux 及Docker 已经有了基本的了解，并掌握了基本的使用命令。对Docker 不熟悉的读者，请参考dockone.io 的Docker 入门教程（ <a class="reference external" href="http://dockone.io/article/111">http://dockone.io/article/111</a> ） 。</p>
+<div class="section" id="id1">
+<h2><span class="section-number">2.1. </span>启动OpenShift<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>（略）</p>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">2.2. </span>运行第一个容器应用<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>OpenShift 服务成功启动后，现在可以尝试运行你的第一个容器应用了！</p>
+<div class="section" id="id3">
+<h3><span class="section-number">2.2.1. </span>创建项目<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>在部署应用前，先要为应用创建一个项目，即Project对象。项目是OpenShift中的一种资源组织方式。对一般用户而言，不同类型的相关资源、可以被归属到某一个项目中进行统一管理。对管理员来说，项目是配额管理和网络隔离的基本单位。</p>
+<p>以dev 用户登录OpenShift 的Web 控制台。单击页面中的New Project 按钮创建一个新的项目。在创建项目页面输入项目名hello-world，展示名称填人Hello World。 单击Create 按钮创建项目，如图2-3 所示。</p>
+<img alt="创建Hello World项目" src="../_images/new_project.jpg" />
+<p>图2-3 创建Hello World项目</p>
+</div>
+<div class="section" id="docker">
+<h3><span class="section-number">2.2.2. </span>部署Docker 镜像<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h3>
+<p>现在马上可以部署你的第一个容器应用了。前文曾介绍到OpenShift是以原生的Docker作为平台的容器引擎，因此只要是有效的Docker 镜像，均可以运行于OpenShift容器云平台之上。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Docker默认允许容器以root 用户的身份执行容器内的程序。OpenShift对容器的安全比Docker 有更谨慎的态度。OpenShift 默认在启动容器应用时使用非root 用户。这可能会导致一些Docker 镜像在OpenShift平台上启动时报出Permission denied 的错误。别担心，其实只需要稍稍修改OpenShift 的安全配置，即可解决这个问题。具体修改我们会在后面的章节介绍。但是请记住，在制作自己的Docker 镜像时，建议避免使用root 用户启动容器内的应用，以降低安全风险。</p>
+</div>
+<p>下面在OpenShift 上运行Docker Hub上的hello-openshift 镜像。单击页面上的Deploy Image 按钮，如图2-4 所示。</p>
+<img alt="部署容器镜像" src="../_images/project_status.jpg" />
+<p>图2-4 部署容器镜像</p>
+<p>在部署镜像页面，输入镜像名称openshift/hello-openshift，然后单击放大镜按钮，如图2-5 所示。单击按钮后OpenShift 将根据输入的镜像名称在Docker Hub 及配置了的镜像仓库中查找该名称的容器镜像。</p>
+<img alt="输入容器镜像名称" src="../_images/deploy_image.jpg" />
+<p>图2-5 输入容器镜像名称</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>请保证实验用的虚拟机能连接上互联网，以访问DockerHub 仓库下载所需镜像。</p>
+</div>
+<p>片刻之后， OpenShift 将找到我们指定的镜像，井加载镜像的信息。浏览信息后， 单击页面下方的Deploy 按钮进行部署，如图2-6 所示。此时OpenShift将会在后台创建部署此容器镜像的相关对象。</p>
+<img alt="确认部署容器镜像" src="../_images/docker_deploy.jpg" />
+<p>图2-6 确认部署容器镜像</p>
+<p>确认部署后，页面将转跳到Projct Status，如图2-7 所示。 单击页面上的hello-openshift链接, 页面右边会显示Hello World项目的DC(DeploymentConfig)的信息，如图2-8 所示。单击页面上的#1链接转跳到Hello World项目的ReplicationController Details页面，如图2-9 所示。</p>
+<img alt="部署完成确认页面" src="../_images/project_status_pod.jpg" />
+<p>图2-7 部署完成确认页面</p>
+<img alt="Hello World 项目Project Status页面" src="../_images/deploy_image_DC.jpg" />
+<p>图2-8 Hello World 项目Project Status页面</p>
+<img alt="Hello World 项目ReplicationController Details页面" src="../_images/deploy_image_RC.jpg" />
+<p>图2-9 Hello World 项目ReplicationController Details页面</p>
+<p>当第一次部署某个容器应用时，由于需要到DockerHub 上下载镜像文件，所以需要等待一定的时间。所需时间视实验主机所在网络的网速而定。如果在创建容器应用的过程中出现了Image Pull Error 的状态，可以尝试手工下载镜像。检查Docker 能否正常连接上Docker Hub 及其镜像站点。</p>
+<p>docker pull docker.io/openshift/hello-openshift</p>
+<p>稍等片刻后， hello-openshift 容器会成功启动。可以看到项目主页上的“0 of 1 pods”变成了“1 of 1 pods”。这说明容器已经成功启动了，当前有“1”个在运行的实例。</p>
+</div>
+<div class="section" id="id4">
+<h3><span class="section-number">2.2.3. </span>访问容器应用<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>容器启动后，用户就可以尝试访问这个容器实例中运行的应用服务了。当容器启动后，每个容器实例都会被赋予一个内部的IP 地址，用户可以通过这个地址访问容器。</p>
+<p>单击界面上的“Pods”菜单将跳转到容器的实例列表，单击列表中的容器进入容器详情页面。在详情页面可以看到当前的容器被分配了一个IP 地址，如图2-10 中的10.131.10.25。</p>
+<img alt="hello-openshift 容器的详情页面" src="../_images/deploy_image_pod.jpg" />
+<p>图2-10 hello-openshift 容器的详情页面</p>
+<p>回到实验的主机上，执行下面的命令就可以访问hello-openshift 容器提供的服务。hello-openshift 中运行着一个简单的用Go 语言编写的应用。其监听在8080 端口，并为所有请求返回字符串Hello Open-Shift！。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[root@311playground-master-1 ~]# curl 10.131.10.25:8080
+Hello OpenShift!
+</pre></div>
+</div>
+<p>如上面的输出所示，容器应用成功返回了Hello OpenShift！ 。这表明，我们的容器应用工作正常。</p>
+</div>
+<div class="section" id="id5">
+<h3><span class="section-number">2.2.4. </span>一些疑问<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>在实验的主机上，我们通过命令curl 10.131.10.25:8080 成功访问了应用。但是如果在另一台主机上执行相同的命令，就会发现无法访问到这个服务。别着急，这是因为10.131.10.25 是一个内部的IP 地址，只存在于OpenShift 集群当中。OpenShift集群之外的机器将无法识别这个IP 地址。那么，集群外的机器该如何访问我们的容器服务呢？这里先买个关子，在后面的章节里，我们将会慢慢揭晓答案。</p>
+<p>至此，我们运行了一个名为hello-openshift的容器镜像。hello-openshift是一个非常简单的容器应用。在hello-openshift的容器启动时会运行一个用Go 语言编写的程序，这个程序将会持续监听在8080 端口，响应任何输入请求并返回字符串“ Hello OpenShift！” 。接下来，我们将部署一个更加复杂且有趣的容器应用，并一起探索OpenShift为部署的容器应用提供了哪些后台支持。</p>
+</div>
+</div>
+<div class="section" id="id6">
+<h2><span class="section-number">2.3. </span>完善OpenShift<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>OpenShift 作为一个容器云平台，默认提供了一系列用户开箱即用、一键部署的应用和服务，这些应用和服务的信息也需要在系统中注册，以便用户在类似软件市场（ App Store ）的服务目录中选用。现在让我们一起完善这个OpenShift 实例。</p>
+<div class="section" id="id7">
+<h3><span class="section-number">2.3.1. </span>命令行工具<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>在上一章中，我们使用OpenShift的Web 控制台部署了第一个容器应用。OpenShift的Web 控制台的用户体验非常好，通过图形界面，用户可以高效快速地完成操作。除了Web 控制台外，OpenShift 还提供了一系列命令行工具。</p>
+<p>oc是OpenShift中一个重要的命令行客户端。 OpenShift Web 控制台能完成的事情，通过oc 命令也能完成。在进行自动化及重复性的操作时，命令行工具比图形界面更加高效。为了方便读者进行实验操作，本书后续的示例将以命令行进行操作。可以尝试执行oc version 命令查看OpenShift的集群版本信息，测试oc命令是否正常工作。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc version</span>
+<span class="n">Client</span> <span class="n">Version</span><span class="p">:</span> <span class="n">openshift</span><span class="o">-</span><span class="n">clients</span><span class="o">-</span><span class="mf">4.3</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">201910250623</span><span class="o">-</span><span class="mi">88</span><span class="o">-</span><span class="n">g6a937dfe</span>
+<span class="n">Server</span> <span class="n">Version</span><span class="p">:</span> <span class="mf">4.3</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">Kubernetes</span> <span class="n">Version</span><span class="p">:</span> <span class="n">v1</span><span class="o">.</span><span class="mf">16.2</span>
+</pre></div>
+</div>
+<p>可以看到命令输出了OpenShift 及其使用的Kubernetes 的版本信息。因为oc 命令是带有权限管控的，所以在使用oc 命令进行实际的操作前，需要先通过oc login 命令登录。如下例所示，通过oc login 命令，以dev 用户的身份登录。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc login -u dev https://192.168.172.167:8443</span>
+<span class="n">error</span><span class="p">:</span> <span class="n">The</span> <span class="n">server</span> <span class="n">uses</span> <span class="n">a</span> <span class="n">certificate</span> <span class="n">signed</span> <span class="n">by</span> <span class="n">unknown</span> <span class="n">authority</span><span class="o">.</span> <span class="n">You</span> <span class="n">may</span> <span class="n">need</span> <span class="n">to</span> <span class="n">use</span> <span class="n">the</span> <span class="o">--</span><span class="n">certificate</span><span class="o">-</span><span class="n">authority</span> <span class="n">flag</span> <span class="n">to</span> <span class="n">provide</span> <span class="n">the</span> <span class="n">path</span> <span class="n">to</span> <span class="n">a</span> <span class="n">certificate</span> <span class="n">file</span> <span class="k">for</span> <span class="n">the</span> <span class="n">certificate</span> <span class="n">authority</span><span class="p">,</span> <span class="ow">or</span> <span class="o">--</span><span class="n">insecure</span><span class="o">-</span><span class="n">skip</span><span class="o">-</span><span class="n">tls</span><span class="o">-</span><span class="n">verify</span> <span class="n">to</span> <span class="n">bypass</span> <span class="n">the</span> <span class="n">certificate</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">use</span> <span class="n">insecure</span> <span class="n">connections</span><span class="o">.</span>
+
+<span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc login -u dev https://192.168.172.167:8443 --insecure-skip-tls-verify</span>
+<span class="n">Authentication</span> <span class="n">required</span> <span class="k">for</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">172.167</span><span class="p">:</span><span class="mi">8443</span> <span class="p">(</span><span class="n">openshift</span><span class="p">)</span>
+<span class="n">Username</span><span class="p">:</span> <span class="n">dev</span>
+<span class="n">Password</span><span class="p">:</span>
+<span class="n">Login</span> <span class="n">successful</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">have</span> <span class="n">one</span> <span class="n">project</span> <span class="n">on</span> <span class="n">this</span> <span class="n">server</span><span class="p">:</span> <span class="s2">&quot;hello-world&quot;</span>
+
+<span class="n">Using</span> <span class="n">project</span> <span class="s2">&quot;hello-world&quot;</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>通过oc new-project 命令创建一个新项目hello-world-oc。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc new-project hello-world-oc</span>
+<span class="n">Now</span> <span class="n">using</span> <span class="n">project</span> <span class="s2">&quot;hello-world-oc&quot;</span> <span class="n">on</span> <span class="n">server</span> <span class="s2">&quot;https://192.168.172.167:8443&quot;</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">can</span> <span class="n">add</span> <span class="n">applications</span> <span class="n">to</span> <span class="n">this</span> <span class="n">project</span> <span class="k">with</span> <span class="n">the</span> <span class="s1">&#39;new-app&#39;</span> <span class="n">command</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span><span class="p">,</span> <span class="k">try</span><span class="p">:</span>
+
+    <span class="n">oc</span> <span class="n">new</span><span class="o">-</span><span class="n">app</span> <span class="n">django</span><span class="o">-</span><span class="n">psql</span><span class="o">-</span><span class="n">example</span>
+
+<span class="n">to</span> <span class="n">build</span> <span class="n">a</span> <span class="n">new</span> <span class="n">example</span> <span class="n">application</span> <span class="ow">in</span> <span class="n">Python</span><span class="o">.</span> <span class="n">Or</span> <span class="n">use</span> <span class="n">kubectl</span> <span class="n">to</span> <span class="n">deploy</span> <span class="n">a</span> <span class="n">simple</span> <span class="n">Kubernetes</span> <span class="n">application</span><span class="p">:</span>
+
+    <span class="n">kubectl</span> <span class="n">create</span> <span class="n">deployment</span> <span class="n">hello</span><span class="o">-</span><span class="n">node</span> <span class="o">--</span><span class="n">image</span><span class="o">=</span><span class="n">gcr</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">hello</span><span class="o">-</span><span class="n">minikube</span><span class="o">-</span><span class="n">zero</span><span class="o">-</span><span class="n">install</span><span class="o">/</span><span class="n">hello</span><span class="o">-</span><span class="n">node</span>
+</pre></div>
+</div>
+<p>前文我们通过Web控制台部署了hello-openshift镜像。在命令行可以通过oc new-app命令方便地部署Docker Hub 等Docker 镜像仓库的镜像。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc new-app openshift/hello-openshift</span>
+<span class="o">--&gt;</span> <span class="n">Found</span> <span class="n">container</span> <span class="n">image</span> <span class="mi">7</span><span class="n">af3297</span> <span class="p">(</span><span class="mi">2</span> <span class="n">years</span> <span class="n">old</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">Docker</span> <span class="n">Hub</span> <span class="k">for</span> <span class="s2">&quot;openshift/hello-openshift&quot;</span>
+
+    <span class="o">*</span> <span class="n">An</span> <span class="n">image</span> <span class="n">stream</span> <span class="n">tag</span> <span class="n">will</span> <span class="n">be</span> <span class="n">created</span> <span class="k">as</span> <span class="s2">&quot;hello-openshift:latest&quot;</span> <span class="n">that</span> <span class="n">will</span> <span class="n">track</span> <span class="n">this</span> <span class="n">image</span>
+    <span class="o">*</span> <span class="n">This</span> <span class="n">image</span> <span class="n">will</span> <span class="n">be</span> <span class="n">deployed</span> <span class="ow">in</span> <span class="n">deployment</span> <span class="n">config</span> <span class="s2">&quot;hello-openshift&quot;</span>
+    <span class="o">*</span> <span class="n">Ports</span> <span class="mi">8080</span><span class="o">/</span><span class="n">tcp</span><span class="p">,</span> <span class="mi">8888</span><span class="o">/</span><span class="n">tcp</span> <span class="n">will</span> <span class="n">be</span> <span class="n">load</span> <span class="n">balanced</span> <span class="n">by</span> <span class="n">service</span> <span class="s2">&quot;hello-openshift&quot;</span>
+      <span class="o">*</span> <span class="n">Other</span> <span class="n">containers</span> <span class="n">can</span> <span class="n">access</span> <span class="n">this</span> <span class="n">service</span> <span class="n">through</span> <span class="n">the</span> <span class="n">hostname</span> <span class="s2">&quot;hello-openshift&quot;</span>
+
+<span class="o">--&gt;</span> <span class="n">Creating</span> <span class="n">resources</span> <span class="o">...</span>
+    <span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span> <span class="s2">&quot;hello-openshift&quot;</span> <span class="n">created</span>
+    <span class="n">deploymentconfig</span><span class="o">.</span><span class="n">apps</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span> <span class="s2">&quot;hello-openshift&quot;</span> <span class="n">created</span>
+    <span class="n">service</span> <span class="s2">&quot;hello-openshift&quot;</span> <span class="n">created</span>
+<span class="o">--&gt;</span> <span class="n">Success</span>
+    <span class="n">Application</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">exposed</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">expose</span> <span class="n">services</span> <span class="n">to</span> <span class="n">the</span> <span class="n">outside</span> <span class="n">world</span> <span class="n">by</span> <span class="n">executing</span> <span class="n">one</span> <span class="ow">or</span> <span class="n">more</span> <span class="n">of</span> <span class="n">the</span> <span class="n">commands</span> <span class="n">below</span><span class="p">:</span>
+     <span class="s1">&#39;oc expose svc/hello-openshift&#39;</span>
+    <span class="n">Run</span> <span class="s1">&#39;oc status&#39;</span> <span class="n">to</span> <span class="n">view</span> <span class="n">your</span> <span class="n">app</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>执行oc get pod 命令可以查看当前项目的容器的列表。和在Kubernetes 一样，在OpenShift中，所有的Docker容器都是被“包裹”在一种称为Pod 的容器内部。用户可以近似地认为Pod 就是我们要运行的Docker 容器本身。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc get pod</span>
+<span class="n">NAME</span>                       <span class="n">READY</span>   <span class="n">STATUS</span>      <span class="n">RESTARTS</span>   <span class="n">AGE</span>
+<span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">deploy</span>   <span class="mi">0</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Completed</span>   <span class="mi">0</span>          <span class="mi">62</span><span class="n">s</span>
+<span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n6v7m</span>    <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Running</span>     <span class="mi">0</span>          <span class="mi">46</span><span class="n">s</span>
+</pre></div>
+</div>
+<p>执行oc describe pod 命令可以查看Pod 的详细配置和状态信息。下例为Pod hello-openshift-1-8gvli 的详细信息， 包含容器的名称、状态、所处的命名空间（项目）、标签、IP 地址等。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc describe pod hello-openshift-1-n6v7m</span>
+<span class="n">Name</span><span class="p">:</span>         <span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">n6v7m</span>
+<span class="n">Namespace</span><span class="p">:</span>    <span class="n">hello</span><span class="o">-</span><span class="n">world</span><span class="o">-</span><span class="n">oc</span>
+<span class="n">Priority</span><span class="p">:</span>     <span class="mi">0</span>
+<span class="n">Node</span><span class="p">:</span>         <span class="n">worker2</span><span class="o">.</span><span class="n">walt</span><span class="o">-</span><span class="mi">43</span><span class="n">api</span><span class="o">-</span><span class="mf">1.</span><span class="n">os</span><span class="o">.</span><span class="n">fyre</span><span class="o">.</span><span class="n">ibm</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="mf">10.16</span><span class="o">.</span><span class="mf">58.71</span>
+<span class="n">Start</span> <span class="n">Time</span><span class="p">:</span>   <span class="n">Sat</span><span class="p">,</span> <span class="mi">01</span> <span class="n">Aug</span> <span class="mi">2020</span> <span class="mi">18</span><span class="p">:</span><span class="mi">48</span><span class="p">:</span><span class="mi">25</span> <span class="o">-</span><span class="mi">0700</span>
+<span class="n">Labels</span><span class="p">:</span>       <span class="n">deployment</span><span class="o">=</span><span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="o">-</span><span class="mi">1</span>
+              <span class="n">deploymentconfig</span><span class="o">=</span><span class="n">hello</span><span class="o">-</span><span class="n">openshift</span>
+<span class="n">Annotations</span><span class="p">:</span>  <span class="n">k8s</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">cni</span><span class="o">.</span><span class="n">cncf</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">networks</span><span class="o">-</span><span class="n">status</span><span class="p">:</span>
+                <span class="p">[{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;openshift-sdn&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;interface&quot;</span><span class="p">:</span> <span class="s2">&quot;eth0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;ips&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;10.254.15.121&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;dns&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                    <span class="s2">&quot;default-route&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;10.254.12.1&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}]</span>
+              <span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">deployment</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">latest</span><span class="o">-</span><span class="n">version</span><span class="p">:</span> <span class="mi">1</span>
+              <span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">deployment</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">hello</span><span class="o">-</span><span class="n">openshift</span>
+              <span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">deployment</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="o">-</span><span class="mi">1</span>
+              <span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">generated</span><span class="o">-</span><span class="n">by</span><span class="p">:</span> <span class="n">OpenShiftNewApp</span>
+              <span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">scc</span><span class="p">:</span> <span class="n">restricted</span>
+<span class="n">Status</span><span class="p">:</span>       <span class="n">Running</span>
+<span class="n">IP</span><span class="p">:</span>           <span class="mf">10.254</span><span class="o">.</span><span class="mf">15.121</span>
+<span class="n">IPs</span><span class="p">:</span>
+  <span class="n">IP</span><span class="p">:</span>           <span class="mf">10.254</span><span class="o">.</span><span class="mf">15.121</span>
+<span class="n">Controlled</span> <span class="n">By</span><span class="p">:</span>  <span class="n">ReplicationController</span><span class="o">/</span><span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">Containers</span><span class="p">:</span>
+  <span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="p">:</span>
+    <span class="n">Container</span> <span class="n">ID</span><span class="p">:</span>   <span class="n">cri</span><span class="o">-</span><span class="n">o</span><span class="p">:</span><span class="o">//</span><span class="n">f4f0e878ce826fd597f7727ada2585214878b3e509e6038b01ddb8c795a0347e</span>
+    <span class="n">Image</span><span class="p">:</span>          <span class="n">openshift</span><span class="o">/</span><span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="nd">@sha256</span><span class="p">:</span><span class="n">aaea76ff622d2f8bcb32e538e7b3cd0ef6d291953f3e7c9f556c1ba5baf47e2e</span>
+    <span class="n">Image</span> <span class="n">ID</span><span class="p">:</span>       <span class="n">docker</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">openshift</span><span class="o">/</span><span class="n">hello</span><span class="o">-</span><span class="n">openshift</span><span class="nd">@sha256</span><span class="p">:</span><span class="n">aaea76ff622d2f8bcb32e538e7b3cd0ef6d291953f3e7c9f556c1ba5baf47e2e</span>
+    <span class="n">Ports</span><span class="p">:</span>          <span class="mi">8080</span><span class="o">/</span><span class="n">TCP</span><span class="p">,</span> <span class="mi">8888</span><span class="o">/</span><span class="n">TCP</span>
+    <span class="n">Host</span> <span class="n">Ports</span><span class="p">:</span>     <span class="mi">0</span><span class="o">/</span><span class="n">TCP</span><span class="p">,</span> <span class="mi">0</span><span class="o">/</span><span class="n">TCP</span>
+    <span class="n">State</span><span class="p">:</span>          <span class="n">Running</span>
+      <span class="n">Started</span><span class="p">:</span>      <span class="n">Sat</span><span class="p">,</span> <span class="mi">01</span> <span class="n">Aug</span> <span class="mi">2020</span> <span class="mi">18</span><span class="p">:</span><span class="mi">48</span><span class="p">:</span><span class="mi">41</span> <span class="o">-</span><span class="mi">0700</span>
+    <span class="n">Ready</span><span class="p">:</span>          <span class="kc">True</span>
+    <span class="n">Restart</span> <span class="n">Count</span><span class="p">:</span>  <span class="mi">0</span>
+    <span class="n">Environment</span><span class="p">:</span>    <span class="o">&lt;</span><span class="n">none</span><span class="o">&gt;</span>
+    <span class="n">Mounts</span><span class="p">:</span>
+      <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">secrets</span><span class="o">/</span><span class="n">kubernetes</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">serviceaccount</span> <span class="kn">from</span> <span class="nn">default</span><span class="o">-</span><span class="n">token</span><span class="o">-</span><span class="n">btszs</span> <span class="p">(</span><span class="n">ro</span><span class="p">)</span>
+<span class="o">......</span>
+</pre></div>
+</div>
+<p>在后续的介绍中， 我们会使用oc 命令进行大量的操作，相信你很快就会熟悉它的使用方法。</p>
+</div>
+<div class="section" id="id8">
+<h3><span class="section-number">2.3.2. </span>以集群管理员登录<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>在OpenShift 中，默认的集群管理员是system:admin。system:admin 这个用户拥有最高的权限。有意思的是，和其他用户不同， system:admin 用户并没有密码！ system:admin 的登录依赖于证书密钥。以下是登录的方法。</p>
+<p>1 ）拷贝登录配置文件。如果提示文件已存在，请选择覆盖。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># mkdir -p ~/.kube</span>
+<span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># cp ~/auth/kubeconfig ~/.kube/config</span>
+</pre></div>
+</div>
+<p>2 ）通过oc login 命令登录。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc login -u system:admin</span>
+<span class="n">Logged</span> <span class="n">into</span> <span class="s2">&quot;https://192.168.172.167:8443&quot;</span> <span class="k">as</span> <span class="s2">&quot;system:admin&quot;</span> <span class="n">using</span> <span class="n">existing</span> <span class="n">credentials</span><span class="o">.</span>
+
+<span class="n">You</span> <span class="n">have</span> <span class="n">access</span> <span class="n">to</span> <span class="mi">62</span> <span class="n">projects</span><span class="p">,</span> <span class="n">the</span> <span class="nb">list</span> <span class="n">has</span> <span class="n">been</span> <span class="n">suppressed</span><span class="o">.</span> <span class="n">You</span> <span class="n">can</span> <span class="nb">list</span> <span class="nb">all</span> <span class="n">projects</span> <span class="k">with</span> <span class="s1">&#39;oc projects&#39;</span>
+
+<span class="n">Using</span> <span class="n">project</span> <span class="s2">&quot;hello-world-oc&quot;</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>3 ）执行oc whoami 命令，即可见当前登录用户为system:admin 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@masteropenshift</span><span class="p">]</span><span class="c1"># oc whoami</span>
+<span class="n">system</span><span class="p">:</span><span class="n">admin</span>
+</pre></div>
+</div>
+<p>可以尝试执行oc get node 命令查看集群节点信息。只有集群管理员才有权限查看集
+群的节点信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@walt</span><span class="o">-</span><span class="mi">43</span><span class="n">api</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">inf</span> <span class="n">auth</span><span class="p">]</span><span class="c1"># oc get nodes</span>
+<span class="n">NAME</span>                                   <span class="n">STATUS</span>     <span class="n">ROLES</span>    <span class="n">AGE</span>    <span class="n">VERSION</span>
+<span class="n">master0</span><span class="o">.</span><span class="n">walt</span><span class="o">-</span><span class="mi">43</span><span class="n">api</span><span class="o">-</span><span class="mf">1.</span><span class="n">os</span><span class="o">.</span><span class="n">fyre</span><span class="o">.</span><span class="n">ibm</span><span class="o">.</span><span class="n">com</span>   <span class="n">Ready</span>      <span class="n">master</span>   <span class="mi">155</span><span class="n">d</span>   <span class="n">v1</span><span class="o">.</span><span class="mf">16.2</span>
+</pre></div>
+</div>
+<p>可以看到我们的机器中有且只有一个节点master0.walt-43api-1.os.fyre.ibm.com ，它的状态是就绪(Ready）的。在实际的生产环境中，集群中将会有许多节点，这会是一个庞大的列表。</p>
+</div>
+<div class="section" id="router-openshift-4">
+<h3><span class="section-number">2.3.3. </span>添加Router (Openshift 4不适用)<a class="headerlink" href="#router-openshift-4" title="Permalink to this headline">¶</a></h3>
+<p>首先，为集群添加一个Router 组件。Router 是OpenShift集群中一个重要的组件，它是外界访问集群内容器应用的入口。集群外部的请求都会到达Router ，并由Router 分发到具体的容器中。关于Router 的详细信息我们会在后续的章节详细探讨。</p>
+<p>切换到default 项目。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc project default</span>
+</pre></div>
+</div>
+<p>Router 组件需要读取集群的信息，因此它关联一个系统账号Service Account ，并为这个账号赋权。Service Account 是OpenShift专门供程序和组件使用的账号。OpenShift中有严格的权限和安全保障机制。不同的用户会关联到不同的安全上下文（ Security Context Constraint, SCC ） 。同时，用户或组也会关联到不同的系统角色（ Role ） 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc adm policy add-scc-to-user privileged system:serviceaccount:default:router</span>
+</pre></div>
+</div>
+<p>执行oa adm router 命令创建Router 实例。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc adm router router --replicas=l --service-account=router</span>
+<span class="n">info</span><span class="p">:</span> <span class="n">password</span> <span class="k">for</span> <span class="n">stats</span> <span class="n">user</span> <span class="n">admin</span> <span class="n">has</span> <span class="n">been</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">EhEVZXbjAn</span>
+<span class="o">--&gt;</span> <span class="n">Creating</span> <span class="n">router</span> <span class="n">router</span> <span class="o">...</span>
+<span class="n">serviceaccount</span> <span class="s2">&quot;router&quot;</span> <span class="n">created</span>
+<span class="n">clusterrolebinding</span> <span class="s2">&quot;router-router-role&quot;</span> <span class="n">created</span>
+<span class="n">deploymentconfig</span> <span class="s2">&quot;router&quot;</span> <span class="n">created</span>
+<span class="n">service</span> <span class="s2">&quot;router&quot;</span> <span class="n">created</span>
+<span class="o">--&gt;</span> <span class="n">Success</span>
+</pre></div>
+</div>
+<p>oc adm命令是面向集群管理员，可以进行集群的管理和配置。在上面的命令中，我们指定创建一个名为router的Router 。</p>
+<p>参数–replicas=l 表明，我们只想创建一个实例。在实际的生产中，为了达到高可用的效果，可以创建多个Router 实例实现负载均衡并防止单点失效。</p>
+<p>执行片刻之后，通过oc get pod -n default 命令可以查看Router 容器的状态。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc get pod -n defaul t</span>
+<span class="n">NAME</span>           <span class="n">READY</span> <span class="n">STATUS</span>  <span class="n">RESTARTS</span> <span class="n">AGE</span>
+<span class="n">router</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">e95qa</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>   <span class="n">Running</span> <span class="mi">0</span>        <span class="mi">3</span><span class="n">m</span>
+</pre></div>
+</div>
+<p>上面的输出显示Router 容器的状态是Running 。如果此时检查实验主机上的端口监听状态，可以发现主机的端口80 、443 正在被Haproxy 监听。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># ss -ltn|egrep -w &quot;80|443&quot;</span>
+<span class="n">LISTEN</span>     <span class="mi">0</span>      <span class="mi">128</span>          <span class="o">*</span><span class="p">:</span><span class="mi">443</span>                      <span class="o">*</span><span class="p">:</span><span class="o">*</span>
+<span class="n">LISTEN</span>     <span class="mi">0</span>      <span class="mi">128</span>          <span class="o">*</span><span class="p">:</span><span class="mi">80</span>                       <span class="o">*</span><span class="p">:</span><span class="o">*</span>
+</pre></div>
+</div>
+<p>其实，从技术上来说， Router 就是一个运行在容器中的Haproxy ，当然这个Haproxy 经过了特别的配置来实现特殊的功能。这些我们在后面再详细讨论。</p>
+<p>至此， Router 组件部署就已经完成了。</p>
+</div>
+<div class="section" id="registry-openshift-4">
+<h3><span class="section-number">2.3.4. </span>添加Registry (Openshift 4不适用)<a class="headerlink" href="#registry-openshift-4" title="Permalink to this headline">¶</a></h3>
+<p>接下来部署集群内部的Docker Registry，即内部的Docker 镜像仓库。从功能上说， OpenShift的内部的镜像仓库和外部的企业镜像仓库或者Docker Hub 没有本质的区别。只是这个内部的镜像仓库会用来存放－些“特殊的”镜像，这些镜像是由一个叫Source to Image ( S2I ）流程产生的。简单地说， S2I 的工作是辅助将应用的源代码转换成可以部署的Docker 镜像。关于S2I， 后续再详细介绍。</p>
+<p>1 ） 切换到default 项目。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc project default</span>
+</pre></div>
+</div>
+<p>2 ） 执行如下命令部署Registry。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc adm registry --config=/etc/origin/master/admin.kubeconfig --service-account=registry</span>
+<span class="o">--&gt;</span> <span class="n">Creating</span> <span class="n">registry</span> <span class="n">registry</span> <span class="o">...</span>
+<span class="n">serviceaccount</span> <span class="s2">&quot;registry&quot;</span> <span class="n">created</span>
+<span class="n">clusterrolebinding</span> <span class="s2">&quot;registry-registry-role&quot;</span> <span class="n">created</span>
+<span class="n">deploymentconfig</span> <span class="s2">&quot;docker-registry&quot;</span> <span class="n">created</span>
+<span class="n">service</span> <span class="s2">&quot;docker-registry&quot;</span> <span class="n">created</span>
+<span class="o">--&gt;</span> <span class="n">Success</span>
+</pre></div>
+</div>
+<p>3 ） 稍候片刻， 执行oc get pod 便可见Registry 容器处于运行状态了。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc get pod</span>
+<span class="n">NAME</span>                   <span class="n">READY</span>  <span class="n">STATUS</span>  <span class="n">RESTARTS</span> <span class="n">AGE</span>
+<span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">xm3u</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>    <span class="n">Running</span> <span class="mi">0</span>        <span class="n">lm</span>
+<span class="n">router</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">e95qa</span>         <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>    <span class="n">Running</span> <span class="mi">0</span>        <span class="mi">9</span><span class="n">m</span>
+</pre></div>
+</div>
+<p>在本例中，因为我们部署的Registry没有启用HTTPS ，所以需要修改Docker 的配置让Docker 以非HTTPS 的方式连接到Registry。修改/etc/sysconfig/docker 文件，为OPTIONS 变量值追加–insecure-registry=https://172.30.0.0/16 。修改后的变量值如下：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">=</span><span class="s1">&#39;--selinux-enabled --log-driver=journald --registry-mirror=https://docker.mirrors.ustc.edu.cn --insecure-registry=l72.30.0.0/16&#39;</span>
+</pre></div>
+</div>
+<p>4 ）重启Docker 服务，使修改的配置生效。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="n">opt</span><span class="p">]</span><span class="c1"># systemctl restart docker</span>
+</pre></div>
+</div>
+<p>至此， Registry 组件部署完成。</p>
+</div>
+<div class="section" id="image-stream">
+<h3><span class="section-number">2.3.5. </span>添加Image Stream<a class="headerlink" href="#image-stream" title="Permalink to this headline">¶</a></h3>
+<p>Image Stream 是一组镜像的集合。可以在一个Image Stream 中定义一些名称及标签( tag ） ，并定义这些名字及标签指向的具体镜像。值得指出的是，在OpenShift上部署容器应用，并不一定要用到Image Stream ，直接指定镜像的地址也可以完成部署。使用Image Stream
+为的是方便地将一组相关联的镜像进行整合管理和使用。OpenShift默认为用户定义了一系列开箱即用的Image Stream 。</p>
+<p>1 ） 切换到openshift 项目。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc project openshift</span>
+<span class="n">Now</span> <span class="n">using</span> <span class="n">project</span> <span class="s2">&quot;openshift&quot;</span> <span class="n">on</span> <span class="n">server</span> <span class="s2">&quot;https://192.168.172.167:8443&quot;</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>2 ） 通过以下命令可以导人Image Stream 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="o">@</span><span class="mi">311</span><span class="n">playground</span><span class="o">-</span><span class="n">master</span><span class="o">-</span><span class="mi">1</span> <span class="o">~</span><span class="p">]</span><span class="c1"># curl https://raw.githubusercontent.com/openshift/origin/master/examples/image-streams/image-streams-rhel7.json |oc create -f - -n openshift</span>
+  <span class="o">%</span> <span class="n">Total</span>    <span class="o">%</span> <span class="n">Received</span> <span class="o">%</span> <span class="n">Xferd</span>  <span class="n">Average</span> <span class="n">Speed</span>   <span class="n">Time</span>    <span class="n">Time</span>     <span class="n">Time</span>  <span class="n">Current</span>
+                                 <span class="n">Dload</span>  <span class="n">Upload</span>   <span class="n">Total</span>   <span class="n">Spent</span>    <span class="n">Left</span>  <span class="n">Speed</span>
+<span class="mi">100</span> <span class="mi">61797</span>  <span class="mi">100</span> <span class="mi">61797</span>    <span class="mi">0</span>     <span class="mi">0</span>  <span class="mi">98892</span>      <span class="mi">0</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="o">--</span><span class="p">:</span><span class="o">--</span><span class="p">:</span><span class="o">--</span> <span class="mi">98875</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">dotnet</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">httpd</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">jenkins</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">mariadb</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">mongodb</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">mysql</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">nginx</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">nodejs</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">perl</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">php</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">postgresql</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">python</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">redis</span> <span class="n">created</span>
+<span class="n">imagestream</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">ruby</span> <span class="n">created</span>
+</pre></div>
+</div>
+<p>3 ） 通过oc get is -n openshift 命令，可以列出刚才导人的Image Stream 对象。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc get is -n openshift</span>
+<span class="n">NAME</span>                                      <span class="n">DOCKER</span> <span class="n">REPO</span>                                                                     <span class="n">TAGS</span>                         <span class="n">UPDATED</span>
+<span class="n">db2u</span>                                      <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">db2u</span>                                      <span class="mf">11.5</span><span class="o">.</span><span class="mf">2.0</span><span class="o">-</span><span class="mi">875</span><span class="o">-</span><span class="n">x86_64</span>          <span class="mi">2</span> <span class="n">months</span> <span class="n">ago</span>
+<span class="n">db2u</span><span class="o">.</span><span class="n">auxiliary</span><span class="o">.</span><span class="n">auth</span>                       <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">db2u</span><span class="o">.</span><span class="n">auxiliary</span><span class="o">.</span><span class="n">auth</span>                       <span class="mf">11.5</span><span class="o">.</span><span class="mf">2.0</span><span class="o">-</span><span class="mi">875</span><span class="o">-</span><span class="n">x86_64</span>          <span class="mi">2</span> <span class="n">months</span> <span class="n">ago</span>
+<span class="n">db2u</span><span class="o">.</span><span class="n">instdb</span>                               <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">db2u</span><span class="o">.</span><span class="n">instdb</span>                               <span class="mf">11.5</span><span class="o">.</span><span class="mf">2.0</span><span class="o">-</span><span class="mi">875</span><span class="o">-</span><span class="n">x86_64</span>          <span class="mi">2</span> <span class="n">months</span> <span class="n">ago</span>
+<span class="n">db2u</span><span class="o">.</span><span class="n">tools</span>                                <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">db2u</span><span class="o">.</span><span class="n">tools</span>                                <span class="mf">11.5</span><span class="o">.</span><span class="mf">2.0</span><span class="o">-</span><span class="mi">875</span><span class="o">-</span><span class="n">x86_64</span>          <span class="mi">2</span> <span class="n">months</span> <span class="n">ago</span>
+<span class="n">dotnet</span>                                    <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">dotnet</span>                                    <span class="mf">1.0</span><span class="p">,</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.0</span> <span class="o">+</span> <span class="mi">2</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">etcd</span>                                      <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">etcd</span>                                      <span class="mf">3.3</span><span class="o">.</span><span class="mi">10</span><span class="o">-</span><span class="mi">875</span><span class="o">-</span><span class="n">x86_64</span>            <span class="mi">2</span> <span class="n">months</span> <span class="n">ago</span>
+<span class="n">httpd</span>                                     <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">httpd</span>                                     <span class="mf">2.4</span>
+<span class="n">jenkins</span>                                   <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">jenkins</span>                                   <span class="mi">2</span>
+<span class="n">mariadb</span>                                   <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">mariadb</span>                                   <span class="mf">10.1</span><span class="p">,</span><span class="mf">10.2</span>
+<span class="n">mongodb</span>                                   <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">mongodb</span>                                   <span class="mf">2.6</span><span class="p">,</span><span class="mf">3.2</span><span class="p">,</span><span class="mf">3.4</span> <span class="o">+</span> <span class="mi">2</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">mysql</span>                                     <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">mysql</span>                                     <span class="mf">5.5</span><span class="p">,</span><span class="mf">5.6</span><span class="p">,</span><span class="mf">5.7</span>
+<span class="n">nginx</span>                                     <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">nginx</span>                                     <span class="mf">1.10</span><span class="p">,</span><span class="mf">1.12</span><span class="p">,</span><span class="mf">1.8</span>
+<span class="n">nodejs</span>                                    <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">nodejs</span>                                    <span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span> <span class="o">+</span> <span class="mi">3</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">perl</span>                                      <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">perl</span>                                      <span class="mf">5.20</span><span class="p">,</span><span class="mf">5.24</span><span class="p">,</span><span class="mf">5.26</span> <span class="o">+</span> <span class="mi">1</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">php</span>                                       <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">php</span>                                       <span class="mf">7.0</span><span class="p">,</span><span class="mf">7.1</span><span class="p">,</span><span class="mf">5.5</span> <span class="o">+</span> <span class="mi">1</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">postgresql</span>                                <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">postgresql</span>                                <span class="mf">9.5</span><span class="p">,</span><span class="mf">9.6</span><span class="p">,</span><span class="mi">10</span> <span class="o">+</span> <span class="mi">2</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">python</span>                                    <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">python</span>                                    <span class="mf">2.7</span><span class="p">,</span><span class="mf">3.3</span><span class="p">,</span><span class="mf">3.4</span> <span class="o">+</span> <span class="mi">2</span> <span class="n">more</span><span class="o">...</span>
+<span class="n">redis</span>                                     <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">redis</span>                                     <span class="mf">3.2</span>
+<span class="n">ruby</span>                                      <span class="n">docker</span><span class="o">-</span><span class="n">registry</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">svc</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">rhos</span><span class="o">/</span><span class="n">ruby</span>                                      <span class="mf">2.2</span><span class="p">,</span><span class="mf">2.3</span><span class="p">,</span><span class="mf">2.4</span> <span class="o">+</span> <span class="mi">2</span> <span class="n">more</span><span class="o">...</span>
+</pre></div>
+</div>
+<p>此时，如果访问OpenShift的Web 控制台，进入Hello World 项目，单击项目Overview页面顶部的Add to project 按钮，则会看见一系列可用的镜像被罗列在页面上，如图2-11 所示。</p>
+<img alt="导人Image Stream 后Web 界面展示可用的镜像列表" src="../_images/source-to-image.jpg" />
+<p>图2-11 导人Image Stream 后Web 界面展示可用的镜像列表</p>
+</div>
+<div class="section" id="template">
+<h3><span class="section-number">2.3.6. </span>添加Template<a class="headerlink" href="#template" title="Permalink to this headline">¶</a></h3>
+<p>部署容器应用，可以很简单： 直接通过docker run 或oc new-app 命令即可完成。但是有时候它也可以是一项很复杂的任务。在现实中，企业的应用往往不是孤立存在的，应用往往有多个模块；部署需要满足外部的依赖；用户需要根据实际的需求，结合环境的配置给部署传递不同的参数。为了满足用户对复杂应用部署的需求，提高应用部署的效率，OpenShift引入了应用部署模板 Template ）的概念。通过Template ，用户可以定义一个或多个需要部署的镜像，定义部署依赖的对象，定义可供用户输入配置的参数项。OpenShift 默认提供了一些示例的Template 供用户使用。后续用户可以根据实际的需求，定义满足企业需求的应用部署模板，构建企业内部的软件市场。</p>
+<p>1 ）切换到openshift 项目。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc project openshift</span>
+<span class="n">Now</span> <span class="n">using</span> <span class="n">project</span> <span class="s2">&quot;openshift&quot;</span> <span class="n">on</span> <span class="n">server</span> <span class="s2">&quot;https://192.168.172.167:8443&quot;</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>2 ）下载并创建一个CakePHP 示例应用的Template 。通过这个Template ，用户可以在服务目录单击相关的条目一键部署一个CakePHP 应用和一个MySQL 数据库。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc create -f https://raw.githubusercontent.com/openshift/origin/master/examples/quickstarts/cakephp-mysql.json -n openshift</span>
+<span class="n">template</span> <span class="s2">&quot;cakephp mysql example&quot;</span> <span class="n">created</span>
+</pre></div>
+</div>
+<p>3 ）创建完毕后，可以通过oc get template -n openshift 命令查看导人的模板信息。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@rnaster</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc get template -n openshift</span>
+<span class="n">NAME</span>                    <span class="n">DESCRIPTION</span>                                                                        <span class="n">PARAMETERS</span>     <span class="n">OBJECTS</span>
+<span class="n">cakephp</span><span class="o">-</span><span class="n">mysql</span><span class="o">-</span><span class="n">example</span>   <span class="n">An</span> <span class="n">example</span> <span class="n">CakePHP</span> <span class="n">application</span> <span class="k">with</span> <span class="n">a</span> <span class="n">MySQL</span> <span class="n">database</span><span class="o">.</span> <span class="n">For</span> <span class="n">more</span> <span class="n">information</span> <span class="n">ab</span><span class="o">...</span>   <span class="mi">19</span> <span class="p">(</span><span class="mi">4</span> <span class="n">blank</span><span class="p">)</span>   <span class="mi">8</span>
+</pre></div>
+</div>
+<p>如果要查看模板的详细内容，可以通过oc get template cakephp-mysql-example -o json -n openshift 命令查看。-o 参数指定了命令以json 格式输出返回值。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">oc</span> <span class="n">get</span> <span class="n">template</span> <span class="n">cakephp</span><span class="o">-</span><span class="n">mysql</span><span class="o">-</span><span class="n">example</span> <span class="o">-</span><span class="n">o</span> <span class="n">json</span> <span class="o">-</span><span class="n">n</span> <span class="n">openshift</span>
+</pre></div>
+</div>
+<p>刷新OpenShift Web 控制台的服务目录界面，在过滤器中输入cake ，即可看到刚导人的应用模板，如图2-12 所示。</p>
+<img alt="导人的CakePHP 应用模板显示在Web 控制台" src="../_images/Template.jpg" />
+<p>图2-12 导人的CakePHP 应用模板显示在Web 控制台</p>
+<p>在OpenShift的GitHub 仓库中还有许多预定义好的Template 示例。你可以按需下载，并通过oc create -f 命令导人系统中。</p>
+<p>请执行下面的命令导入wildfly-basic-s2i 模板，这在后面的章节会使用到。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">oc</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">nichochen</span><span class="o">/</span><span class="n">openshift</span><span class="o">-</span><span class="n">book</span><span class="o">-</span><span class="n">source</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">template</span><span class="o">/</span><span class="n">wildfly</span><span class="o">-</span><span class="n">basic</span><span class="o">-</span><span class="n">s2i</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">json</span> <span class="o">-</span><span class="n">n</span> <span class="n">openshift</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id9">
+<h2><span class="section-number">2.4. </span>部署应用<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
+<p>在前几节中，我们完成了众多关键组件的部署。现在是时候尝试部署一些应用了。本节我们将部署一个CakePHP 应用及MySQL 数据库。</p>
+<p>1 ）登录Openshift Web 控制台。单击New project 按钮。创建一个名为hello-world-php的项目。输入项目名称hello-world-php 及项目显示名Hello World PHP 。单击Create 按钮创建项目，如图2-13 所示。</p>
+<img alt="创建hello-world-php项目" src="../_images/new_project_php.jpg" />
+<p>图2-13 创建hello-world-php项目</p>
+<p>2 ）点击Browser Catalog按钮， 在服务目录的过滤器中输入cake ，找到CakePHP + MySQL (Ephemeral) 模板，并选中它，如图2-14所示。</p>
+<img alt="选取cakephp-mysql-example模板" src="../_images/select-cakephp.jpg" />
+<p>图2-14 选取cakephp-mysql-example模板</p>
+<p>3 ）选取Template后将跳转至Template的参数输入页面, 单击模板参数输入页面底部的Create 按钮，执行部署，如图2-16 所示。</p>
+<img alt="执行实例化Template" src="../_images/create_cakephp.jpg" />
+<p>图2-16 执行实例化Template</p>
+<p>4 ）执行部署后，浏览器将跳转至部署完成页面，如图2-17 所示。</p>
+<img alt="部署完成页面" src="../_images/cakephp_complete.jpg" />
+<p>图2-17 部署完成页面</p>
+<p>5 ）稍等片刻后，在CakePHP 的构建日志界面，可以看到镜像构建的实时日志输出，如图2-19 所示。从日志中可以看到， OpenShift 会从GitHub 仓库中下载指定的PHP 源代码，然后将代码注入一个含PHP 运行环境的镜像， 最终生成一个包含PHP 应用及PHP 运行环境的新镜像，并将新的镜像推送到前文部署的内部镜像仓库。</p>
+<img alt="CakePHP 应用的S2I 构建日志" src="../_images/S2I_build.jpg" />
+<p>图2-19 CakePHP 应用的S2I 构建日志</p>
+<p>像仓库是否正确部署与配置。第一次推送镜像的时间会比较长， 因为此时镜像仓库中还没有相应的镜像层（ Layer ） 。后续构建的镜像推送时间将会大大加快，因为大量可以重用的镜像层已经存在于内部的镜像仓库中了。</p>
+<p>6 ）构建完成后，单击左侧菜单栏的Status按钮，回到项目主页，如图2-20 所示。此时可见CakePHP 应用已经启动完毕。</p>
+<img alt="项目主页" src="../_images/S2I_done.jpg" />
+<p>图2-20 项目主页</p>
+<p>7 ）单击左侧菜单栏的Networking下的Routes按钮， 进入Routes页面， 如果2-21 所示。点击 cakephp-mysql-example的Location link，即打开容器应用， 如果2-22所示。</p>
+<img alt="Routes页面" src="../_images/deploy_route.jpg" />
+<p>图2-21 Routes页面</p>
+<img alt="CakePHP 应用页面" src="../_images/cakePHP.jpg" />
+<p>图2-22 CakePHP 应用页面</p>
+<p>在这个应用部署的例子中，我们通过选择一个预定义的应用部署模板，快速部署了一个CakePHP 应用及一个MySQL 数据库。整个部署的过程，不外乎几次鼠标单击。在实际的使用中，企业可以在服务目录中加入各种不同的应用服务模板，构建出企业内部软件市场式的服务目录。用户或管理员可以通过服务目录选取需要部署的软件应用模板，输入相应的参数，然后执行部署，相关的应用服务便会以容器的方式运行在指定的服务器集群上。这些应用服务可以是一个单体的应用，也可以包含多个不同的组件，如前文部署的示例，包含了一个前端PHP 应用及一个后端MySQL 数据库。通过软件市场式的服务目录，即使对OpenShift没有太多了解的用户，也能快速部署复杂的应用。作为一个容器云平台， OpenShift极大地提升了应用部署的效率，使得应用部署实现自动化及标准化。</p>
+</div>
+<div class="section" id="id10">
+<h2><span class="section-number">2.5. </span>本章小节<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>通过本章，我们成功安装及运行了Openshift集群，并完成了对OpenShift 集群的完善和升级，增加了Router 及Registry 组件；丰富了OpenShift 平台上可供用户选择的应用和服务；通过服务目录，快速部署了一个带有前端PHP 应用及后端数据库的应用。通过本章的探索，相信你对OpenShift 的了解更上了一个层次。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="OpenShift架构探秘.html" class="btn btn-neutral float-right" title="3. OpenShift 架构探秘" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="容器云概述.html" class="btn btn-neutral float-left" title="1. 开源容器云概述" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Murphy
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Angular培训</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create three equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 30%;
+            padding: 15px;
+            height: 230px;
+            /* Should be removed. Only for demonstration */
+            margin: 3px;
+            border-bottom-right-radius: 20%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            padding: 3px;
+        }
+
+        /* Responsive layout - makes the three columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        我们开展的Angular课程是一种高质量的、经过实战考验的培训体验，带有最新的课件，可以上门到您的公司，
+        也可以作为公开课程在线授课。
+        <br />
+        在整个培训过程中，我们将构建一个真实的Angular应用程序，向您教授框架的所有基本和高级概念。
+    </p>
+    <h2>课程介绍</h2>
+    <div class="row">
+        <div class="column" style="background-color:rgba(117, 247, 105, 0.534);">
+            <h2>1. Angular介绍</h2>
+            <ui>
+                <li>TypeScript 基础</li>
+                <li>Node 基础</li>
+                <li>Angular 概念</li>
+                <li>构建应用程序</li>
+                <li>显示数据</li>
+                <li>使用指令</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:#a2edf785;">
+            <h2>2. Angular CLI命令</h2>
+            <ui>
+                <li>创建并启动项目</li>
+                <li>生成组件</li>
+                <li>生成服务</li>
+                <li>转换TypeScript</li>
+                <li>构建应用程序</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:rgb(245, 176, 245);">
+            <h2>3. 依赖注入</h2>
+            <ui>
+                <li>创建服务</li>
+                <li>配置Providers</li>
+                <li>Providers策略</li>
+                <li>深入理解注入</li>
+                <li>Injector API</li>
+            </ui>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column" style="background-color:rgba(117, 247, 105, 0.534);">
+            <h2>4. HTTP服务</h2>
+            <ui>
+                <li>观察者对象</li>
+                <li>配置请求头</li>
+                <li>Observables和Promises</li>
+                <li>Rxjs操作</li>
+                <li>四种Subject的用法</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:#a2edf785;">
+            <h2>5. 架构</h2>
+            <ui>
+                <li>输入和输出</li>
+                <li>组件通信</li>
+                <li>ContentChildren</li>
+                <li>ViewChildren</li>
+                <li>自定义Eventbus</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:rgb(245, 176, 245);">
+            <h2>6. 表单</h2>
+            <ui>
+                <li>模版驱动表单</li>
+                <li>响应式表单</li>
+                <li>表单验证</li>
+                <li>自定义验证</li>
+                <li>自定义表单操作</li>
+            </ui>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column" style="background-color:rgba(117, 247, 105, 0.534);">
+            <h2>7. 路由</h2>
+            <ui>
+                <li>配置路由</li>
+                <li>路由守卫</li>
+                <li>路由解析</li>
+                <li>子路由</li>
+                <li>延迟加载模块</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:#a2edf785;">
+            <h2>8. Angular Material</h2>
+            <ui>
+                <li>安装使用</li>
+                <li>Flex-box布局</li>
+                <li>Material UI基础</li>
+                <li>表单组件</li>
+                <li>动态UI</li>
+
+            </ui>
+        </div>
+        <div class="column" style="background-color:rgb(245, 176, 245);">
+            <h2>9. Testing</h2>
+            <ui>
+                <li>Karma</li>
+                <li>Jasmine</li>
+                <li>测试服务</li>
+                <li>测试组件</li>
+                <li>单元测试</li>
+                <li>E2E测试</li>
+            </ui>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column" style="background-color:rgba(117, 247, 105, 0.534);">
+            <h2>10. Redux</h2>
+            <ui>
+                <li>理解Redux</li>
+                <li>Scratch Store</li>
+                <li>中间件</li>
+                <li>Thunk 中间件</li>
+                <li>Phased操作</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:#a2edf785;">
+            <h2>11. ngrx状态管理</h2>
+            <ui>
+                <li>ngrx Store</li>
+                <li>Actions和Reducers</li>
+                <li>中间件</li>
+                <li>Effects和Facades</li>
+                <li>Action Splitters</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:rgb(245, 176, 245);">
+            <h2>12. 服务端渲染</h2>
+            <ui>
+                <li>构建服务器</li>
+                <li>Angular的API</li>
+                <li>服务端渲染</li>
+                <li>启用实时页面加载</li>
+                <li>性能优化</li>
+            </ui>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column" style="background-color:rgba(117, 247, 105, 0.534);">
+            <h2>13. 实战案例</h2>
+            <ui>
+                <li>Cold和Hot Observables实战</li>
+                <li>通过RxJS实现缓存</li>
+                <li>实现消息通知机制</li>
+                <li>多个组件之间通信</li>
+                <li>容器部署</li>
+            </ui>
+        </div>
+        <div class="column" style="background-color:#a2edf785;">
+            <ui>
+            </ui>
+        </div>
+        <div class="column" style="background-color:rgb(245, 176, 245);">
+            <ui>
+            </ui>
+        </div>
+    </div>
+    <p>
+        联系热线：15871352105
+    </p>
+    <br />
+</body>
+
+</html>

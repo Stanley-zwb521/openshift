@@ -1,0 +1,402 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Openshift</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. 开源容器云概述" href="pages/容器云概述.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#">
+          
+
+          
+            
+            <img src="_static/sphinx.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录：</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pages/容器云概述.html">1. 开源容器云概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/初探OpenShift容器云.html">2. 初探OpenShift容器云</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/OpenShift架构探秘.html">3. OpenShift 架构探秘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/OpenShift企业部署.html">4. OpenShift 企业部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html">5. 容器应用的构建与部署自动化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/持续集成与部署.html">6. 持续集成与部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/应用的微服务化.html">7. 应用的微服务化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pages/应用数据持久化.html">8. 应用数据持久化</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">nest</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+                   
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+    <ul class="wy-breadcrumbs">
+        
+        <li><a href="#">首页</a> &raquo;</li>
+        
+        <li>Openshift</li>
+         
+        <li class="wy-breadcrumbs-aside">
+            <a href="https://pages.github.ibm.com/fsd-training/cvitube" class="fa fa-github"> CVITube</a>  
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>  
+        </li>
+        
+    </ul>
+
+    
+    <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="openshift">
+<h1>Openshift<a class="headerlink" href="#openshift" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">目录：</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pages/容器云概述.html">1. 开源容器云概述</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器云概述.html#it">1.1. 容器时代的IT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器云概述.html#id2">1.2. 开源容器云</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器云概述.html#openshift">1.3. Openshift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器云概述.html#docker-kubernetes-openshift">1.4. Docker 、Kubernetes 与OpenShift</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器云概述.html#id3">1.4.1. 容器引擎</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器云概述.html#id4">1.4.2. 容器编排</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器云概述.html#id5">1.4.3. 容器应用云</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器云概述.html#id6">1.5. OpenShift 社区版与企业版</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/初探OpenShift容器云.html">2. 初探OpenShift容器云</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/初探OpenShift容器云.html#id1">2.1. 启动OpenShift</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/初探OpenShift容器云.html#id2">2.2. 运行第一个容器应用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#id3">2.2.1. 创建项目</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#docker">2.2.2. 部署Docker 镜像</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#id4">2.2.3. 访问容器应用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#id5">2.2.4. 一些疑问</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/初探OpenShift容器云.html#id6">2.3. 完善OpenShift</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#id7">2.3.1. 命令行工具</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#id8">2.3.2. 以集群管理员登录</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#router-openshift-4">2.3.3. 添加Router (Openshift 4不适用)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#registry-openshift-4">2.3.4. 添加Registry (Openshift 4不适用)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#image-stream">2.3.5. 添加Image Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/初探OpenShift容器云.html#template">2.3.6. 添加Template</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/初探OpenShift容器云.html#id9">2.4. 部署应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/初探OpenShift容器云.html#id10">2.5. 本章小节</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/OpenShift架构探秘.html">3. OpenShift 架构探秘</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift架构探秘.html#id1">3.1. 架构概览</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id2">3.1.1. 基础架构层</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id3">3.1.2. 容器引擎层</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id4">3.1.3. 容器编排层</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#paas">3.1.4. PaaS 服务层</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id5">3.1.5. 界面及工具层</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift架构探秘.html#id6">3.2. 核心组件详解</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#master">3.2.1. Master 节点</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#node">3.2.2. Node 节点</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#project-namespace">3.2.3. Project 与Namespace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#pod">3.2.4. Pod</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#service">3.2.5. Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#router-route">3.2.6. Router 与Route</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#persistent-storage">3.2.7. Persistent Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#registry">3.2.8. Registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#source-to-image">3.2.9. Source to Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id7">3.2.10. 开发及管理工具集</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift架构探秘.html#id8">3.3. 核心流程详解</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id9">3.3.1. 应用构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id10">3.3.2. 应用部署</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id11">3.3.3. 请求处理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift架构探秘.html#id12">3.3.4. 应用更新</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift架构探秘.html#id13">3.4. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/OpenShift企业部署.html">4. OpenShift 企业部署</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift企业部署.html#id1">4.1. 部署架构</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id2">4.1.1. 多环境单集群</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id3">4.1.2. 多环境多集群</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id4">4.1.3. 多个数据中心</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift企业部署.html#id5">4.2. 高级安装模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift企业部署.html#id6">4.3. 集群高可用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id7">4.3.1. 主控节点的高可用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id8">4.3.2. 计算节点的高可用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id9">4.3.3. 组件的高可用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/OpenShift企业部署.html#id10">4.3.4. 应用的高可用</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/OpenShift企业部署.html#id11">4.4. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html">5. 容器应用的构建与部署自动化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#java">5.1. 一个Java 应用的容器化之旅</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#openshift">5.2. OpenShift 构建与部署自动化</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id2">5.2.1. 快速构建部署一个应用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#build-config-build">5.2.2. 镜像构建： Build Config 与Build</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#deployment-config-deploy">5.2.3. 镜像部署： Deployment Config 与Deploy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#service-route">5.2.4. 服务连通： Service 与Route</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id3">5.3. 弹性伸缩</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#replication-controller">5.3.1. Replication Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id6">5.3.2. 扩展容器实例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id7">5.3.3. 状态自恢复</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id8">5.4. 应用更新发布</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id9">5.4.1. 触发更新构建</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id10">5.4.2. 更新部署</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/容器应用的构建与部署自动化.html#id11">5.5. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/持续集成与部署.html">6. 持续集成与部署</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/持续集成与部署.html#jenkins">6.1. 部署Jenkins 服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/持续集成与部署.html#id2">6.2. 触发项目构建</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/持续集成与部署.html#id3">6.2.1. 创建Jenkins 项目</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/持续集成与部署.html#id4">6.2.2. 触发构建</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/持续集成与部署.html#id5">6.3. 构建部署流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/持续集成与部署.html#id6">6.4. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/应用的微服务化.html">7. 应用的微服务化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id2">7.1. 容器与微服务</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id3">7.1.1. 微服务概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id4">7.1.2. 微服务与容器</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id5">7.2. 微服务容器化</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id6">7.2.1. 基于现有的构建系统窑器化微服务</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#s2i">7.2.2. 基于S2I容器化微服务</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id7">7.3. 服务部署</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id8">7.3.1. 单个微服务的部署</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id9">7.3.2. 多个微服务的部署</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id10">7.4. 服务发现</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#service">7.5. 通过Service 进行服务发现</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id11">7.5.1. 服务目录与链接</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id12">7.6. 健康检查</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#readniess-liveness">7.6.1. Readniess 与Liveness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id13">7.6.2. 健康检查类型</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id14">7.7. 更新发布</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id15">7.7.1. 滚动更新</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id16">7.7.2. 发布回滚</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id17">7.7.3. 灰度发布</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id18">7.8. 服务治理</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#api">7.8.1. API 网关</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用的微服务化.html#id19">7.8.2. 微服务框架</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用的微服务化.html#id20">7.9. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pages/应用数据持久化.html">8. 应用数据持久化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用数据持久化.html#id2">8.1. 无状态应用与有状态应用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id3">8.1.1. 非持久化的窑器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id4">8.1.2. 容器数据持久化</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用数据持久化.html#id5">8.2. 持久化卷与持久化卷请求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用数据持久化.html#id6">8.3. 持久化卷与储存</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#host-path">8.3.1. Host Path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#nfs">8.3.2. NFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#glusterfs">8.3.3. GlusterFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#ceph">8.3.4. Ceph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#openstack-cinder">8.3.5. OpenStack Cinder</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用数据持久化.html#id7">8.4. 存储资源定向匹配</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id8">8.4.1. 创建持久化卷</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id9">8.4.2. 标记标签</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id10">8.4.3. 创建持久化卷请求</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id11">8.4.4. 请求与资源定向匹配</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id12">8.4.5. 标签选择器</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用数据持久化.html#id13">8.5. 实战：持久化的镜像仓库</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id14">8.5.1. 检查挂载点</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id15">8.5.2. 备份数据</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id16">8.5.3. 创建存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id17">8.5.4. 创建持久化卷</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id18">8.5.5. 创建持久化卷请求</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pages/应用数据持久化.html#id19">8.5.6. 关联持久化卷请求</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pages/应用数据持久化.html#id20">8.6. 本章小结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pages/容器云概述.html" class="btn btn-neutral float-right" title="1. 开源容器云概述" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Murphy
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

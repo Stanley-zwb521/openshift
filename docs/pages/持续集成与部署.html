@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6. 持续集成与部署</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="7. 应用的微服务化" href="应用的微服务化.html" />
+    <link rel="prev" title="5. 容器应用的构建与部署自动化" href="容器应用的构建与部署自动化.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/sphinx.svg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">目录：</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="容器云概述.html">1. 开源容器云概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="初探OpenShift容器云.html">2. 初探OpenShift容器云</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift架构探秘.html">3. OpenShift 架构探秘</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OpenShift企业部署.html">4. OpenShift 企业部署</a></li>
+<li class="toctree-l1"><a class="reference internal" href="容器应用的构建与部署自动化.html">5. 容器应用的构建与部署自动化</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. 持续集成与部署</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#jenkins">6.1. 部署Jenkins 服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">6.2. 触发项目构建</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">6.2.1. 创建Jenkins 项目</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">6.2.2. 触发构建</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">6.3. 构建部署流水线</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">6.4. 本章小结</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="应用的微服务化.html">7. 应用的微服务化</a></li>
+<li class="toctree-l1"><a class="reference internal" href="应用数据持久化.html">8. 应用数据持久化</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nest</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+                   
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+    <ul class="wy-breadcrumbs">
+        
+        <li><a href="../index.html">首页</a> &raquo;</li>
+        
+        <li><span class="section-number">6. </span>持续集成与部署</li>
+         
+        <li class="wy-breadcrumbs-aside">
+            <a href="https://pages.github.ibm.com/fsd-training/cvitube" class="fa fa-github"> CVITube</a>  
+            <a href="../_sources/pages/持续集成与部署.md.txt" rel="nofollow"> View page source</a>  
+        </li>
+        
+    </ul>
+
+    
+    <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1><span class="section-number">6. </span>持续集成与部署<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>持续集成（continuous integration ）已经成为现代化软件开发流程中不可缺少的一个环节。持续集成的理念其实并不复杂，就是要对开发出的一个或多个模块的代码频繁地进行编译、构建、集成、测试，尽早发现产品存在的潜在问题，从而减少修复的成本，降低项目的风险。在实践持续集成的过程中往往需要实现软件编译、构建和测试的自动化，这减少了软件研发中手工重复的工作，节省了时间，提升了软件开发的效率。</p>
+<p>企业构建容器云的一个重要目的就是提升产品开发的效率和质量。因此，容器云平台在设计时必须考虑如何为应用开发提供持续集成支持。让应用开发团队能更容易实现持续集成，提升开发效率和产品质量。</p>
+<p>Jenkins 是目前最流行的持续集成平台。在Jenkins 平台上，用户可以通过定时构建、事件触发式构建、自定义构建等方式快速实现持续集成流程。Open Shift 提供了定制的Jenkins镜像。这个镜像中的Jenkins 默认集成了Open Shift 插件，通过该插件， Jenkins 的构建步骤编排中可以加入OpenShift的平台的调用，实现OpenShift与Jenkins 的集成。</p>
+<div class="section" id="jenkins">
+<h2><span class="section-number">6.1. </span>部署Jenkins 服务<a class="headerlink" href="#jenkins" title="Permalink to this headline">¶</a></h2>
+<p>OpenShift项目提供了集成OpenShift 插件的Jenkins 容器镜像及部署模板。通过部署Jenkins的部署模板，用户可以方便快速地部署Jenkins 服务。</p>
+<p>OpenShift项目默认提供了两个Jenkins 部署模板： jenkins-ephemeral 和jenkins-persistent 。jenkins-persistent 模板部署需要持久化卷的支持，其部署的Jenkins 服务的数据可以被持久化。jenkins-ephemeral 模板部署的Jenkins 服务的数据在容器退出后将丢失，适合测试使用。本章的关注点为Jenkins 及支持集成， 因此本章均以非持久化的Jenkins 服务为例，而持久化的相关内容将在后面的章节讨论。</p>
+<p>以dev 用户登录OpenShift 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc login -u dev</span>
+</pre></div>
+</div>
+<p>创建一个名为ci 的新项目部署Jenkins 服务。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc new project ci</span>
+</pre></div>
+</div>
+<p>下载并导人OpenShift 提供的Jenkins jenkins-ephemeral 。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc create -f https://raw.githubusercontent.com/openshift/origin/master/examples/jenkins/jenkins-ephemeral-template.json</span>
+<span class="n">template</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span><span class="o">/</span><span class="n">jenkins</span><span class="o">-</span><span class="n">ephemeral</span> <span class="n">created</span>
+</pre></div>
+</div>
+<p>模板导人完毕后，可以看到Jenkins 模板出现在了ci 项目中。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span> <span class="n">J</span><span class="c1"># oc get template</span>
+<span class="n">NAME</span>                <span class="n">DESCRIPTION</span>                                       <span class="n">PARAMETERS</span>    <span class="n">OBJECTS</span>
+<span class="n">jenkins</span><span class="o">-</span><span class="n">ephemeral</span>   <span class="n">Jenkins</span> <span class="n">service</span><span class="p">,</span> <span class="n">without</span> <span class="n">persistent</span> <span class="n">storage</span><span class="o">....</span>   <span class="mi">7</span> <span class="p">(</span><span class="nb">all</span> <span class="nb">set</span><span class="p">)</span>   <span class="mi">6</span>
+</pre></div>
+</div>
+<p>通过Jenkins 模板部署Jenkins 服务。前面章节提到应用部署模板Template，用户可以实现应用的一键式部署。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>   <span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span> <span class="n">J</span><span class="c1"># oc new-app --template=jenkins-ephemeral</span>
+   <span class="o">--&gt;</span> <span class="n">Deploying</span> <span class="n">template</span> <span class="s2">&quot;ci/jenkins-ephemeral&quot;</span> <span class="n">to</span> <span class="n">project</span> <span class="n">ci</span>
+
+<span class="n">Jenkins</span> <span class="p">(</span><span class="n">Ephemeral</span><span class="p">)</span>
+<span class="o">---------</span>
+<span class="n">Jenkins</span> <span class="n">service</span><span class="p">,</span> <span class="n">without</span> <span class="n">persistent</span> <span class="n">storage</span><span class="o">.</span>
+
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">Any</span> <span class="n">data</span> <span class="n">stored</span> <span class="n">will</span> <span class="n">be</span> <span class="n">lost</span> <span class="n">upon</span> <span class="n">pod</span> <span class="n">destruction</span><span class="o">.</span> <span class="n">Only</span> <span class="n">use</span> <span class="n">this</span> <span class="n">template</span> <span class="k">for</span> <span class="n">testing</span><span class="o">.</span>
+
+<span class="n">A</span> <span class="n">Jenkins</span> <span class="n">service</span> <span class="n">has</span> <span class="n">been</span> <span class="n">created</span> <span class="ow">in</span> <span class="n">your</span> <span class="n">project</span><span class="o">.</span>  <span class="n">Log</span> <span class="n">into</span> <span class="n">Jenkins</span> <span class="k">with</span> <span class="n">your</span> <span class="n">OpenShift</span> <span class="n">account</span><span class="o">.</span>  <span class="n">The</span> <span class="n">tutorial</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">openshift</span><span class="o">/</span><span class="n">origin</span><span class="o">/</span><span class="n">blob</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jenkins</span><span class="o">/</span><span class="n">README</span><span class="o">.</span><span class="n">md</span> <span class="n">contains</span> <span class="n">more</span> <span class="n">information</span> <span class="n">about</span> <span class="n">using</span> <span class="n">this</span> <span class="n">template</span><span class="o">.</span>
+
+<span class="o">*</span> <span class="n">With</span> <span class="n">parameters</span><span class="p">:</span>
+   <span class="o">*</span> <span class="n">Jenkins</span> <span class="n">Service</span> <span class="n">Name</span><span class="o">=</span><span class="n">jenkins</span>
+   <span class="o">*</span> <span class="n">Jenkins</span> <span class="n">JNLP</span> <span class="n">Service</span> <span class="n">Name</span><span class="o">=</span><span class="n">jenkins</span><span class="o">-</span><span class="n">jnlp</span>
+   <span class="o">*</span> <span class="n">Enable</span> <span class="n">OAuth</span> <span class="ow">in</span> <span class="n">Jenkins</span><span class="o">=</span><span class="n">true</span>
+   <span class="o">*</span> <span class="n">Memory</span> <span class="n">Limit</span><span class="o">=</span><span class="mi">512</span><span class="n">Mi</span>
+   <span class="o">*</span> <span class="n">Jenkins</span> <span class="n">ImageStream</span> <span class="n">Namespace</span><span class="o">=</span><span class="n">openshift</span>
+   <span class="o">*</span> <span class="n">Disable</span> <span class="n">memory</span> <span class="n">intensive</span> <span class="n">administrative</span> <span class="n">monitors</span><span class="o">=</span><span class="n">false</span>
+   <span class="o">*</span> <span class="n">Jenkins</span> <span class="n">ImageStreamTag</span><span class="o">=</span><span class="n">jenkins</span><span class="p">:</span><span class="mi">2</span>
+
+   <span class="o">--&gt;</span> <span class="n">Creating</span> <span class="n">resources</span> <span class="o">...</span>
+       <span class="n">route</span><span class="o">.</span><span class="n">route</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span> <span class="s2">&quot;jenkins&quot;</span> <span class="n">created</span>
+       <span class="n">deploymentconfig</span><span class="o">.</span><span class="n">apps</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span> <span class="s2">&quot;jenkins&quot;</span> <span class="n">created</span>
+       <span class="n">serviceaccount</span> <span class="s2">&quot;jenkins&quot;</span> <span class="n">created</span>
+       <span class="n">rolebinding</span><span class="o">.</span><span class="n">authorization</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">io</span> <span class="s2">&quot;jenkins_edit&quot;</span> <span class="n">created</span>
+       <span class="n">service</span> <span class="s2">&quot;jenkins-jnlp&quot;</span> <span class="n">created</span>
+       <span class="n">service</span> <span class="s2">&quot;jenkins&quot;</span> <span class="n">created</span>
+   <span class="o">--&gt;</span> <span class="n">Success</span>
+       <span class="n">Access</span> <span class="n">your</span> <span class="n">application</span> <span class="n">via</span> <span class="n">route</span> <span class="s1">&#39;jenkins-ci.apps.shared.na.openshift.opentlc.com&#39;</span>
+       <span class="n">Run</span> <span class="s1">&#39;oc status&#39;</span> <span class="n">to</span> <span class="n">view</span> <span class="n">your</span> <span class="n">app</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>部署完毕后查看Pod 的状态可以看见系统正在创建Jenkins 容器。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">-</span> <span class="p">]</span> <span class="c1"># oc get pod</span>
+<span class="n">NAME</span>               <span class="n">READY</span>   <span class="n">STATUS</span>      <span class="n">RESTARTS</span>   <span class="n">AGE</span>
+<span class="n">jenkins</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">4</span><span class="n">pwbn</span>    <span class="mi">1</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Running</span>     <span class="mi">0</span>          <span class="mi">6</span><span class="n">m5s</span>
+<span class="n">jenkins</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">deploy</span>   <span class="mi">0</span><span class="o">/</span><span class="mi">1</span>     <span class="n">Completed</span>   <span class="mi">0</span>          <span class="mi">6</span><span class="n">m15s</span>
+</pre></div>
+</div>
+<p>部署需要从网上下载Jenkins 镜像，这个过程将需要一些时间。可以通过oc describe pod 命令观察容器的事件输出。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">-</span> <span class="p">]</span> <span class="c1"># oc describe pod jenkins-1-4pwbn</span>
+</pre></div>
+</div>
+<p>Jenkins 模板中定义了一个Route，通过Route 中指定的主机名，可以访问部署完毕的Jenkins服务。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">root</span><span class="nd">@master</span> <span class="o">~</span><span class="p">]</span><span class="c1"># oc get route</span>
+<span class="n">NAME</span>      <span class="n">HOST</span><span class="o">/</span><span class="n">PORT</span>                                         <span class="n">PATH</span>   <span class="n">SERVICES</span>   <span class="n">PORT</span>    <span class="n">TERMINATION</span>     <span class="n">WILDCARD</span>
+<span class="n">jenkins</span>   <span class="n">jenkins</span><span class="o">-</span><span class="n">ci</span><span class="o">.</span><span class="n">apps</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">na</span><span class="o">.</span><span class="n">openshift</span><span class="o">.</span><span class="n">opentlc</span><span class="o">.</span><span class="n">com</span>          <span class="n">jenkins</span>    <span class="o">&lt;</span><span class="nb">all</span><span class="o">&gt;</span>   <span class="n">edge</span><span class="o">/</span><span class="n">Redirect</span>   <span class="kc">None</span>
+</pre></div>
+</div>
+<p>当日志显示Jenkins 启动完毕后，打开浏览器访问网址jenkins-ci.apps.shared.na.openshift.opentlc.com ，便可以访问Jenkins 服务的登录页面，如图6-1 所示。</p>
+<img alt="Jenkins认证方式" src="../_images/jenkins_login.jpg" />
+<p>图6-1 Jenkins认证方式</p>
+<p>继续并使用OpenShift登录，然后选择“允许选定的权限”选项。 然后，您将看到Jenkins仪表板：</p>
+<img alt="Jenkins主页" src="../_images/welcome-to-jenkins.png" />
+<p>图6-2 Jenkins主页</p>
+</div>
+<div class="section" id="id2">
+<h2><span class="section-number">6.2. </span>触发项目构建<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>OpenShift 提供的Jenkins 镜像已经默认安装了OpenShift的插件，下面将通过一个简单例子介绍Jenkinks 如何与OpenShift 联动。这个例子将会在Jenkins 中触发一个nodejs程序的S2I 构建。</p>
+<div class="section" id="id3">
+<h3><span class="section-number">6.2.1. </span>创建Jenkins 项目<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>现在真正的工作开始了。 我们需要建立构建软件的管道，但是我们要使用OpenShift内置的构建。以下命令将创建一个构建配置（或“ build config”，它是“ BuildConfig”类型的对象），其中包含我们向OpenShift提供的说明，以告诉它如何构建我们的应用程序。 在这种情况下，我们正在创建一个管道，该管道又具有构建说明：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">oc</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">openshift</span><span class="o">/</span><span class="n">origin</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">jenkins</span><span class="o">/</span><span class="n">pipeline</span><span class="o">/</span><span class="n">nodejs</span><span class="o">-</span><span class="n">sample</span><span class="o">-</span><span class="n">pipeline</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>刷新Jenkins主页，页面会先显示一个新建的Jenkins Pipeline ci/nodejs-sample-pipeline，如图6-3 所示。</p>
+<img alt="创建Jenkins 项目nodejs-sample-pipeline" src="../_images/jenkins_project_ci.jpg" />
+<p>图6-3 创建Jenkins 项目nodejs-sample-pipeline</p>
+</div>
+<div class="section" id="id4">
+<h3><span class="section-number">6.2.2. </span>触发构建<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>在Jenkins 控制台首页，点击右边列表的ci条目， 页面会跳转至Jenkins/ci页面， 然后将鼠标指针移动到右边列表的ci/nodejs-sample-pipeline 条目，单击浮动菜单上的Build Now 链接，触发一次构建。当Jenkins 的构建触发后，注意观察OpenShift 的容器列表。</p>
+<p>在ci构建实例的详细页面，单击左边的Console Output 链接，可以看到详细的构建日志，如图6-4 所示。</p>
+<img alt="CI构建实例日志输出" src="../_images/console_output.jpg" />
+<p>图6-4 CI构建实例日志输出</p>
+<p>通过输出可以看到Jenkins 触发了项目的一次构建。除了触发OpenShift 的构建， Jenkins 还能触发OpenShift 项目的部署、资源的创建以及项目的配置等功能。通过不同的Build Step 设计，如添加不同的Jenkins 触发器，用户可以灵活设计项目所需的持续集成流程，满足项目持续集成的需要。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2><span class="section-number">6.3. </span>构建部署流水线<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>一个典型的应用开发场景将经历开发、测试及生产这三个不同的阶段，在不同的环境执行部署和相应的测试。这个从开发到上线的部署流水线，并没有统一的标准，也不是一成不变的。不同的企业、团队，不同阶段定义的过程阶段的数量和内容都可能有所不同。用户可以根据实际需求结合OpenShift及Jenkins 构建满足当前项目的部署流水线。</p>
+<p>一个精简的从开发到上线的流程示例如图6-5 所示。MyBank 应用的源代码存放在GitHub 中，通过OpenShift提供的S21 自动化构建镜像，并自动化部署到开发测试环境中。开发环境部署完毕后，触发开发环境自动化测试。自动化测试成功后， Jenkins 把开发环境构建的应用镜像告知集成测试环境，并进行自动化的部署和测试。集成测试完成后， Jenkins 更新开发环境的Image Stream 的镜像指向，并执行生产环境的部署。</p>
+<img alt="MyBank 应用的部署流水线" src="../_images/pipeline_pic.jpg" />
+<p>图6-5 MyBank 应用的部署流水线</p>
+</div>
+<div class="section" id="id6">
+<h2><span class="section-number">6.4. </span>本章小结<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>本章介绍了在OpenShift中如何实现持续集成和持续部署。OpenShift 提供Jenkins 服务满足用户对持续集成、交付和部署的需求。通过简单的配置， 可以快速搭建出满足项目需要的持续集成和部署环境。此外， OpenShi位Pipeline 为用户流水线的创建和管理提供了一种直观和方便的管理途径。通过OpenShift Pipeline ，用户可以感受到OpenShi 位在Docker 与Kubernetes 的基础上，极大地提升了用户体验，让用户可以提升从开发到生产的工作效率。</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="应用的微服务化.html" class="btn btn-neutral float-right" title="7. 应用的微服务化" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="容器应用的构建与部署自动化.html" class="btn btn-neutral float-left" title="5. 容器应用的构建与部署自动化" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Murphy
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
